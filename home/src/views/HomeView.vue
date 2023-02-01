@@ -58,6 +58,11 @@ export default {
     width: 25%;
   }
 
+  img{
+    filter: drop-shadow(16px 8px 16px black);
+  }
+
+
 </style>
 
 

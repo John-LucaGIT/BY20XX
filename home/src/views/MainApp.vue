@@ -93,6 +93,7 @@ import Goal from './Goal.vue';
 <style scoped>
 
 div.goal-title{
+  margin-top: 0.4rem;
   margin-bottom: 2rem;
 }
 div.goal-wrapper{
