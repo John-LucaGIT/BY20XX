@@ -8,6 +8,10 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "dotenv": "^16.0.3",
+    "encoding": "^0.1.13",
+    "firebase": "^9.16.0",
+    "node-sass": "^8.0.0",
     "register-service-worker": "^1.7.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
@@ -19,7 +23,11 @@
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "bufferutil": "^4.0.7",
+    "fibers": "^5.0.3",
     "sass": "^1.32.7",
-    "sass-loader": "^12.0.0"
+    "sass-embedded": "^1.57.1",
+    "sass-loader": "^12.0.0",
+    "utf-8-validate": "^6.0.2"
   }
 }

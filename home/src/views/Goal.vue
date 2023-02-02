@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import '../main'
 
   export default {
     name: 'Goal',
@@ -35,16 +36,19 @@
         };
     },
     mounted() {
-      if (this.$store) {
-        this.updateDeletedGoalList;
-        this.$store.commit('setList', 'goalList');
-      }
+        // db.collection('goals').get().then(snapshot => {
+        //     snapshot.forEach(doc => {
+        //         this.goals.push(doc.data())
+        //     })
+        // })
+        if (this.$store) {
+            this.updateDeletedGoalList;
+            this.$store.commit('setList', 'goalList');
+        }
     },
     methods:{
 
         deleteGoal(gid){
-
-
             // let test = this.showDeletedGoals === (this.listToShow === deletedGoals);
             console.log('Result',this.showDeletedGoals);
             let test = this.listToShow === this.deletedGoals;
@@ -54,6 +58,11 @@
                 for(let e = 0; e < this.deletedGoals.length; e++){
                     if(this.deletedGoals[e].id == gid){
                         this.$store.commit('addGoal', {
+                            id: this.deletedGoals[e].id,
+                            text: this.deletedGoals[e].text,
+                            status: this.deletedGoals[e].status
+                        });
+                        db.collection('goals').add({
                             id: this.deletedGoals[e].id,
                             text: this.deletedGoals[e].text,
                             status: this.deletedGoals[e].status
