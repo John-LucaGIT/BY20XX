@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import '../main'
 
   export default {
     name: 'Goal',
@@ -36,11 +35,6 @@ import '../main'
         };
     },
     mounted() {
-        // db.collection('goals').get().then(snapshot => {
-        //     snapshot.forEach(doc => {
-        //         this.goals.push(doc.data())
-        //     })
-        // })
         if (this.$store) {
             this.updateDeletedGoalList;
             this.$store.commit('setList', 'goalList');
@@ -58,11 +52,6 @@ import '../main'
                 for(let e = 0; e < this.deletedGoals.length; e++){
                     if(this.deletedGoals[e].id == gid){
                         this.$store.commit('addGoal', {
-                            id: this.deletedGoals[e].id,
-                            text: this.deletedGoals[e].text,
-                            status: this.deletedGoals[e].status
-                        });
-                        db.collection('goals').add({
                             id: this.deletedGoals[e].id,
                             text: this.deletedGoals[e].text,
                             status: this.deletedGoals[e].status

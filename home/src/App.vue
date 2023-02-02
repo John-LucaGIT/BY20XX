@@ -5,17 +5,29 @@
   </nav>
   <router-view/> -->
   <HomeView></HomeView>
+  <button @click="addGoalFB()" class="btn btn-lg btn-warning">WHOW</button>
 </template>
 
 <script>
 // @ is an alias to /src
 import HomeView from './views/HomeView.vue';
+import FireDataService from "./assets/services/database";
+
+// Initialize Firebase
+
 
 export default {
   name: 'App',
   components: {
     HomeView
   },
+  methods:{
+    addGoalFB(){
+      FireDataService.addGoal();
+      FireDataService.getGoalz();
+    }
+  }
+
 }
 </script>
 
