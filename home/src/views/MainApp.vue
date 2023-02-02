@@ -25,8 +25,8 @@
 <script>
   // @ is an alias to /src
 
-import { stringLiteral } from '@babel/types';
-import Goal from './Goal.vue';
+  import { stringLiteral } from '@babel/types';
+  import Goal from './Goal.vue';
 
   export default {
     name: 'MainApp',
