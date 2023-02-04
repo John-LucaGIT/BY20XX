@@ -36,7 +36,7 @@
     data() {
         return {
           goalList: [],
-          gid: 1,
+          gid: 0,
           status: false,
           year: 'XX',
         };
@@ -46,18 +46,24 @@
         this.updateGoalList;
         this.updateYear;
       }
+      if (!this.hasSynced) {
+        this.$emit('syncFB-goals');
+        this.$store.commit('setHasSynced', true)
+      }
     },
 
     methods:{
       goalInput(action) {
         if (document.getElementById('goalInput')){
             this.goal = document.getElementById('goalInput').value;
+            this.$emit('goal-emit',{userid: "User1" , id: this.gid++, goal: this.goal, status: this.status, deleted: false });
             this.$store.commit('addGoal', {
               id: this.gid++,
               text: this.goal,
-              status: this.status
+              status: this.status,
             });
-            this.goalList = this.$store.getters.getGoal
+            this.goalList = this.$store.getters.getGoal;
+
         }
       },
 
@@ -84,6 +90,9 @@
         }
         return this.year = fetchedYear;
       },
+      hasSynced(){
+        return this.$store.state.hasSynced
+      }
     },
   }
 

@@ -1,6 +1,8 @@
 import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-
+import {store} from '../../store/store';
+store.getters.config
+// => 'config'
 
 
 var firebaseConfig = {
@@ -37,21 +39,39 @@ class FireDataService {
     deleteAll() {
         return db.remove();
     }
-    async getGoalz() {
-        const citiesCol = collection(db, 'goals');
-        const citySnapshot = await getDocs(citiesCol);
-        const cityList = citySnapshot.docs.map(doc => doc.data());
-        console.log(cityList);
-        return cityList;
+    async getGoals() {
+        const goalsCol = collection(db, 'goals');
+        const goalSnapshot = await getDocs(goalsCol);
+        const goals = goalSnapshot.docs.map(doc => doc.data());
+        console.log(goals);
+        return goals;
     }
 
-    addGoal() {
+    async syncGoals(){
+        const goalsCol = collection(db, 'goals');
+        const goalSnapshot = await getDocs(goalsCol);
+        const goals = goalSnapshot.docs.map(doc => doc.data());
+        for(let g in goals){
+            store.commit('addGoal', {
+                id: goals[g].id,
+                text: goals[g].text,
+                status: goals[g].status
+            });
+        }
+    }
+
+    addGoal(userid,id,text,status,deleted) {
+        console.log(userid,id,text,status,deleted);
         addDoc(collection(db, 'goals'), {
-            id: 1,
-            text: "nadu",
-            status: false,
+            userid: userid,
+            id: id,
+            text: text,
+            status: status,
+            deleted: deleted,
             date: Date.now()
         });
+        // store.state.deletedGoals = {id: id, text: text, status: status};
+
     }
 }
 

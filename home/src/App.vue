@@ -5,13 +5,14 @@
   </nav>
   <router-view/> -->
   <HomeView></HomeView>
-  <button @click="addGoalFB()" class="btn btn-lg btn-warning">WHOW</button>
+  <button @click="getGoals" class="btn btn-lg btn-warning">WHOW</button>
 </template>
 
 <script>
 // @ is an alias to /src
 import HomeView from './views/HomeView.vue';
 import FireDataService from "./assets/services/database";
+import { getGlobalThis } from '@vue/shared';
 
 // Initialize Firebase
 
@@ -22,10 +23,16 @@ export default {
     HomeView
   },
   methods:{
-    addGoalFB(){
-      FireDataService.addGoal();
-      FireDataService.getGoalz();
+    addGoalFB(payload){
+      FireDataService.addGoal(payload.userid, payload.id, payload.goal, payload.status, payload.deleted);
+    },
+    getGoalsFB(){
+      FireDataService.getGoals();
+    },
+    syncGoalsFB(){
+      FireDataService.syncGoals();
     }
+
   }
 
 }

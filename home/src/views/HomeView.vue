@@ -5,7 +5,7 @@
       <a id="overview" @click="changePage('overview')" >Overview</a>
     </nav>
     <img class="lnd-logo" alt="By20XX logo" src="../assets/by20xx.png">
-    <MainApp v-if="page == 'home'"></MainApp>
+    <MainApp @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
     <GoalOverview v-if="page == 'overview'"></GoalOverview>
   </div>
 </template>
@@ -28,6 +28,12 @@ export default {
     }
   },
   methods:{
+    fireMethod(payload){
+      this.$parent.addGoalFB(payload);
+    },
+    fireMethodGet(){
+      this.$parent.syncGoalsFB();
+    },
     changePage(setting){
       switch(setting){
         case 'home':
