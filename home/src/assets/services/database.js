@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import {store} from '../../store/store';
 store.getters.config
@@ -20,37 +20,20 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 class FireDataService {
-    getAll() {
-        return db;
-    }
 
-    create(object) {
-        return db.push(object);
-    }
-
-    update(key, value) {
-        return db.child(key).update(value);
-    }
-
-    delete(key) {
-        return db.child(key).remove();
-    }
-
-    deleteAll() {
-        return db.remove();
-    }
-    async getGoals() {
-        const goalsCol = collection(db, 'goals');
-        const goalSnapshot = await getDocs(goalsCol);
-        const goals = goalSnapshot.docs.map(doc => doc.data());
+    async getGoals(userid="User1") {
+        const q = query(collection(db, 'goals'), where('userid', '==', userid));
+        const querySnapshot = await getDocs(q);
+        const goals = querySnapshot.docs.map(doc => doc.data());
         console.log(goals);
         return goals;
     }
 
-    async syncGoals(){
-        const goalsCol = collection(db, 'goals');
-        const goalSnapshot = await getDocs(goalsCol);
-        const goals = goalSnapshot.docs.map(doc => doc.data());
+    async syncGoals(userid="User1"){
+        const q = query(collection(db, 'goals'), where('userid', '==', userid));
+        const querySnapshot = await getDocs(q);
+        const goals = querySnapshot.docs.map(doc => doc.data());
+        console.log(goals);
         for(let g in goals){
             store.commit('addGoal', {
                 id: goals[g].id,
@@ -70,7 +53,31 @@ class FireDataService {
             deleted: deleted,
             date: Date.now()
         });
-        // store.state.deletedGoals = {id: id, text: text, status: status};
+    }
+
+    async setDeleted(userid,id = 0){
+        const q1 = query(collection(db, 'goals'), where('userid', '==', userid));
+        const querySnapshot = await getDocs(q1);
+        const goals = querySnapshot.docs.map(doc => ({ docid: doc.id, ...doc.data() }));
+
+        let docID;
+        let deletedFB;
+
+        for(let e in goals){
+            if (goals[e].id == id){
+                console.log(goals[e]);
+                deletedFB = goals[e].deleted;
+                docID = goals[e].docid;
+            }
+
+        }
+        const docRef = doc(db, 'goals', docID);
+
+        await updateDoc(docRef, {
+            deleted: !deletedFB
+        });
+
+        return !deletedFB
 
     }
 }

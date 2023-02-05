@@ -5,7 +5,8 @@
   </nav>
   <router-view/> -->
   <HomeView></HomeView>
-  <button @click="getGoals" class="btn btn-lg btn-warning">WHOW</button>
+  <button @click="getGoalsFB" class="btn btn-lg btn-warning">WHOW</button>
+  <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
 </template>
 
 <script>
@@ -31,6 +32,9 @@ export default {
     },
     syncGoalsFB(){
       FireDataService.syncGoals();
+    },
+    setDeletedFB(){
+      FireDataService.setDeleted("User1");
     }
 
   }
