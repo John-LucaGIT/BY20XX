@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, addDoc, updateDoc, writeBatch, collection, getDocs, query, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import {store} from '../../store/store';
 store.getters.config
@@ -19,6 +19,7 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
+
 class FireDataService {
 
     async getGoals(userid="User1") {
@@ -36,23 +37,32 @@ class FireDataService {
         console.log(goals);
         for(let g in goals){
             store.commit('addGoal', {
+                userid: goals[g].userid,
                 id: goals[g].id,
                 text: goals[g].text,
-                status: goals[g].status
+                status: goals[g].status,
+                deleted: goals[g].deleted
             });
         }
     }
 
-    addGoal(userid,id,text,status,deleted) {
-        console.log(userid,id,text,status,deleted);
-        addDoc(collection(db, 'goals'), {
-            userid: userid,
-            id: id,
-            text: text,
-            status: status,
-            deleted: deleted,
-            date: Date.now()
-        });
+    async saveGoals(goals){
+        const batch = writeBatch(db);
+
+        goals.forEach(goal => {
+            const docRef = doc(collection(db, "goals"));
+            console.log(docRef);
+            batch.set(docRef, {
+              userid: goal.userid,
+              id: goal.id,
+              text: goal.text,
+              status: goal.status,
+              deleted: goal.deleted,
+              date: Date.now()
+            });
+          });
+          await batch.commit();
+
     }
 
     async setDeleted(payload){

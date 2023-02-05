@@ -56,11 +56,13 @@
       goalInput(action) {
         if (document.getElementById('goalInput')){
             this.goal = document.getElementById('goalInput').value;
-            this.$emit('goal-emit',{userid: "User1" , id: this.gid++, goal: this.goal, status: this.status, deleted: false });
+            // this.$emit('goal-emit',{userid: "User1" , id: this.gid++, goal: this.goal, status: this.status, deleted: false });
             this.$store.commit('addGoal', {
+              userid: "User1",
               id: this.gid++,
               text: this.goal,
               status: this.status,
+              deleted: false,
             });
             this.goalList = this.$store.getters.getGoal;
 

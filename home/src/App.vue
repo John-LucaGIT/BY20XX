@@ -7,6 +7,8 @@
   <HomeView></HomeView>
   <button @click="getGoalsFB" class="btn btn-lg btn-warning">WHOW</button>
   <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
+  <button @click="saveGoalsFB" class="btn btn-lg btn-success">SAVE</button>
+
 </template>
 
 <script>
@@ -35,6 +37,11 @@ export default {
     },
     setDeletedFB(payload){
       FireDataService.setDeleted(payload);
+    },
+    saveGoalsFB(){
+      let payload = this.$store.getters.getGoal;
+      console.log(payload);
+      FireDataService.saveGoals(payload);
     }
 
   }
