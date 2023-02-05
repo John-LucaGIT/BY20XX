@@ -5,7 +5,7 @@
       </div>
 
       <div id="goal-list">
-        <Goal :goalList="goalList"></Goal>
+        <Goal @deleteFB="fireMethodDeleteHelper" :goalList="goalList"></Goal>
 
       </div>
 
@@ -65,6 +65,10 @@
             this.goalList = this.$store.getters.getGoal;
 
         }
+      },
+
+      fireMethodDeleteHelper(payload){
+        this.$parent.fireMethodDelete(payload);
       },
 
       validateYear(event) {

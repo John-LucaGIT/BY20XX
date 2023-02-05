@@ -33,8 +33,8 @@ export default {
     syncGoalsFB(){
       FireDataService.syncGoals();
     },
-    setDeletedFB(){
-      FireDataService.setDeleted("User1");
+    setDeletedFB(payload){
+      FireDataService.setDeleted(payload);
     }
 
   }

@@ -55,7 +55,10 @@ class FireDataService {
         });
     }
 
-    async setDeleted(userid,id = 0){
+    async setDeleted(payload){
+        let userid = payload.userid;
+        let gid = payload.gid;
+
         const q1 = query(collection(db, 'goals'), where('userid', '==', userid));
         const querySnapshot = await getDocs(q1);
         const goals = querySnapshot.docs.map(doc => ({ docid: doc.id, ...doc.data() }));
@@ -64,7 +67,7 @@ class FireDataService {
         let deletedFB;
 
         for(let e in goals){
-            if (goals[e].id == id){
+            if (goals[e].id == gid){
                 console.log(goals[e]);
                 deletedFB = goals[e].deleted;
                 docID = goals[e].docid;

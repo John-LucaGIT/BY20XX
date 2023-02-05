@@ -43,7 +43,6 @@
     methods:{
 
         deleteGoal(gid){
-            // let test = this.showDeletedGoals === (this.listToShow === deletedGoals);
             console.log('Result',this.showDeletedGoals);
             let test = this.listToShow === this.deletedGoals;
             console.log('out: ',test);
@@ -57,6 +56,7 @@
                             status: this.deletedGoals[e].status
                         });
                         this.deletedGoals.splice(e,1);
+                        // this.$emit('fireMethodDelete',{userid: "User1" , gid: this.deletedGoals[e].id});
                     }
                 }
             }else{
@@ -69,6 +69,7 @@
                             status: this.goalList[e].status
                         });
                         this.deletedGoals = this.$store.getters.getDeletedGoal;
+                        this.$emit('deleteFB',{userid: "User1" , gid: this.goalList[e].id});
                         this.goalList.splice(e,1);
                     }
                 }
