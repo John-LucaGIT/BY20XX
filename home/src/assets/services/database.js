@@ -31,8 +31,9 @@ class FireDataService {
     }
 
     async syncGoals(userid="User1"){
-        const q = query(collection(db, 'goals'), where('userid', '==', userid));
-        const querySnapshot = await getDocs(q);
+        const userRef = doc(collection(db, "users"), userid);
+        const goalRef = collection(userRef, "goals");
+        const querySnapshot = await getDocs(goalRef);
         const goals = querySnapshot.docs.map(doc => doc.data());
         console.log(goals);
         for(let g in goals){
@@ -50,10 +51,11 @@ class FireDataService {
         const batch = writeBatch(db);
 
         goals.forEach(goal => {
-            const docRef = doc(collection(db, "goals"));
-            console.log(docRef);
-            batch.set(docRef, {
-              userid: goal.userid,
+            const userRef = doc(collection(db, "users"), goal.userid);
+            const goalRef = doc(collection(userRef, "goals"));
+            console.log(userRef);
+            console.log(goalRef);
+            batch.set(goalRef, {
               id: goal.id,
               text: goal.text,
               status: goal.status,
@@ -64,6 +66,7 @@ class FireDataService {
           await batch.commit();
 
     }
+
 
     async setDeleted(payload){
         let userid = payload.userid;
