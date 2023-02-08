@@ -43,7 +43,6 @@
     methods:{
 
         deleteGoal(gid){
-            // let test = this.showDeletedGoals === (this.listToShow === deletedGoals);
             console.log('Result',this.showDeletedGoals);
             let test = this.listToShow === this.deletedGoals;
             console.log('out: ',test);
@@ -52,11 +51,14 @@
                 for(let e = 0; e < this.deletedGoals.length; e++){
                     if(this.deletedGoals[e].id == gid){
                         this.$store.commit('addGoal', {
+                            userid: "User1",
                             id: this.deletedGoals[e].id,
                             text: this.deletedGoals[e].text,
-                            status: this.deletedGoals[e].status
+                            status: this.deletedGoals[e].status,
+                            deleted: false
                         });
                         this.deletedGoals.splice(e,1);
+                        // this.$emit('fireMethodDelete',{userid: "User1" , gid: this.deletedGoals[e].id});
                     }
                 }
             }else{
@@ -64,11 +66,14 @@
                 for(let e = 0; e < this.goalList.length; e++){
                     if(this.goalList[e].id == gid){
                         this.$store.commit('addDeletedGoal', {
+                            userid: "User1",
                             id: this.goalList[e].id,
                             text: this.goalList[e].text,
-                            status: this.goalList[e].status
+                            status: this.goalList[e].status,
+                            deleted: true
                         });
                         this.deletedGoals = this.$store.getters.getDeletedGoal;
+                        this.$emit('deleteFB',{userid: "User1" , gid: this.goalList[e].id});
                         this.goalList.splice(e,1);
                     }
                 }

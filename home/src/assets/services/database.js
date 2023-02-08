@@ -1,6 +1,8 @@
-import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, addDoc, updateDoc, writeBatch, collection, getDocs, query, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-
+import {store} from '../../store/store';
+store.getters.config
+// => 'config'
 
 
 var firebaseConfig = {
@@ -17,41 +19,82 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
+
 class FireDataService {
-    getAll() {
-        return db;
+
+    async getGoals(userid="User1") {
+        const q = query(collection(db, 'goals'), where('userid', '==', userid));
+        const querySnapshot = await getDocs(q);
+        const goals = querySnapshot.docs.map(doc => doc.data());
+        console.log(goals);
+        return goals;
     }
 
-    create(object) {
-        return db.push(object);
+    async syncGoals(userid="User1"){
+        const userRef = doc(collection(db, "users"), userid);
+        const goalRef = collection(userRef, "goals");
+        const querySnapshot = await getDocs(goalRef);
+        const goals = querySnapshot.docs.map(doc => doc.data());
+        console.log(goals);
+        for(let g in goals){
+            store.commit('addGoal', {
+                userid: goals[g].userid,
+                id: goals[g].id,
+                text: goals[g].text,
+                status: goals[g].status,
+                deleted: goals[g].deleted
+            });
+        }
     }
 
-    update(key, value) {
-        return db.child(key).update(value);
+    async saveGoals(goals){
+        const batch = writeBatch(db);
+
+        goals.forEach(goal => {
+            const userRef = doc(collection(db, "users"), goal.userid);
+            const goalRef = doc(collection(userRef, "goals"));
+            console.log(userRef);
+            console.log(goalRef);
+            batch.set(goalRef, {
+              id: goal.id,
+              text: goal.text,
+              status: goal.status,
+              deleted: goal.deleted,
+              date: Date.now()
+            });
+          });
+          await batch.commit();
+
     }
 
-    delete(key) {
-        return db.child(key).remove();
-    }
 
-    deleteAll() {
-        return db.remove();
-    }
-    async getGoalz() {
-        const citiesCol = collection(db, 'goals');
-        const citySnapshot = await getDocs(citiesCol);
-        const cityList = citySnapshot.docs.map(doc => doc.data());
-        console.log(cityList);
-        return cityList;
-    }
+    async setDeleted(payload){
+        let userid = payload.userid;
+        let gid = payload.gid;
 
-    addGoal() {
-        addDoc(collection(db, 'goals'), {
-            id: 1,
-            text: "nadu",
-            status: false,
-            date: Date.now()
+        const q1 = query(collection(db, 'goals'), where('userid', '==', userid));
+        const querySnapshot = await getDocs(q1);
+        const goals = querySnapshot.docs.map(doc => ({ docid: doc.id, ...doc.data() }));
+
+        let docID;
+        let deletedFB;
+
+        for(let e in goals){
+            if (goals[e].id == gid){
+                console.log(goals[e]);
+                deletedFB = goals[e].deleted;
+                docID = goals[e].docid;
+            }
+
+        }
+        const docRef = doc(db, 'goals', docID);
+
+        await updateDoc(docRef, {
+            deleted: !deletedFB
         });
+
+        return !deletedFB
+
     }
 }
 
