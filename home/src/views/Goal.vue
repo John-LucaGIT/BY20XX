@@ -73,7 +73,7 @@
                             deleted: true
                         });
                         this.deletedGoals = this.$store.getters.getDeletedGoal;
-                        this.$emit('deleteFB',{userid: "User1" , gid: this.goalList[e].id});
+                        // this.$emit('deleteFB',{userid: "User1" , gid: this.goalList[e].id});
                         this.goalList.splice(e,1);
                     }
                 }

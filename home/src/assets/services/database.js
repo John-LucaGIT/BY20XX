@@ -23,8 +23,9 @@ const db = getFirestore(app);
 class FireDataService {
 
     async getGoals(userid="User1") {
-        const q = query(collection(db, 'goals'), where('userid', '==', userid));
-        const querySnapshot = await getDocs(q);
+        const userRef = doc(collection(db, "users"), userid);
+        const goalRef = collection(userRef, "goals");
+        const querySnapshot = await getDocs(goalRef);
         const goals = querySnapshot.docs.map(doc => doc.data());
         console.log(goals);
         return goals;
@@ -53,8 +54,6 @@ class FireDataService {
         goals.forEach(goal => {
             const userRef = doc(collection(db, "users"), goal.userid);
             const goalRef = doc(collection(userRef, "goals"));
-            console.log(userRef);
-            console.log(goalRef);
             batch.set(goalRef, {
               id: goal.id,
               text: goal.text,
@@ -71,10 +70,14 @@ class FireDataService {
     async setDeleted(payload){
         let userid = payload.userid;
         let gid = payload.gid;
+        const userRef = doc(collection(db, "users"), userid);
+        const goalRef = collection(userRef, "goals");
+        const querySnapshot = await getDocs(goalRef);
+        const goals = querySnapshot.docs.map(doc => doc.data());
 
-        const q1 = query(collection(db, 'goals'), where('userid', '==', userid));
-        const querySnapshot = await getDocs(q1);
-        const goals = querySnapshot.docs.map(doc => ({ docid: doc.id, ...doc.data() }));
+        // const q1 = query(collection(db, 'goals'), where('userid', '==', userid));
+        // const querySnapshot = await getDocs(q1);
+        // const goals = querySnapshot.docs.map(doc => ({ docid: doc.id, ...doc.data() }));
 
         let docID;
         let deletedFB;
@@ -95,6 +98,10 @@ class FireDataService {
 
         return !deletedFB
 
+    }
+
+    async setAdditional(payload){
+        let passwd = payload.password;
     }
 }
 
