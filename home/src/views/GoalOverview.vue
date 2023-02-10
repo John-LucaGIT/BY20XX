@@ -6,7 +6,7 @@
   <div class="deleted-goals">
     <h3 @click="checkThing()">Deleted Goals</h3>
     <div id="deleted-goal-list">
-        <Goal :deletedGoals="deletedGoals"></Goal>
+        <Goal :goalList="goalList"></Goal>
     </div>
   </div>
 
@@ -24,6 +24,7 @@ export default {
   data(){
     return{
       deletedGoals: [],
+      goalList: [],
       showDeletedGoals: true,
     }
 
@@ -31,8 +32,9 @@ export default {
   mounted() {
     if (this.$store) {
       this.updateDeletedGoalList;
+      this.updateGoalList;
       this.$store.commit('setList', 'deletedGoals');
-      this.showDeletedGoals = true;
+      // this.showDeletedGoals = true;
     }
   },
   methods:{
@@ -53,6 +55,9 @@ export default {
         return this.deletedGoals = this.$store.getters.getDeletedGoal;
 
     },
+    updateGoalList(){
+      return this.goalList = this.$store.getters.getGoal;
+    }
   },
 
 }

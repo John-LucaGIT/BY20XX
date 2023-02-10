@@ -26,6 +26,14 @@ export const store = new Vuex.Store({
     },
     setHasSynced(state, value){
       state.hasSynced = value
+    },
+    setDeleted(state, gid){
+      for(let e in state.goalList){
+        if (state.goalList[e].id == gid){
+          state.goalList[e].deleted = !state.goalList[e].deleted;
+          console.log(state.goalList);
+        }
+      }
     }
 
   },
