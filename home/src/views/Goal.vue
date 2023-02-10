@@ -13,7 +13,7 @@
                                 </div>
                             </div>
                             <div class="col col-sm text-center">
-                                <i v-if="showDeletedGoals === (listToShow === deletedGoals)" @click="toggleGoal(goalList.id)" :id="'check'+goalList.id" :key="goalList.id" :class="{ 'fa-solid fa-check' : goalList.status == false, 'fa-solid fa-times' : goalList.status}"></i>
+                                <i v-if="showDeletedGoals === false" @click="toggleGoal(goalList.id)" :id="'check'+goalList.id" :key="goalList.id" :class="{ 'fa-solid fa-check' : goalList.status == false, 'fa-solid fa-times' : goalList.status}"></i>
                             </div>
                         </div>
                     </div>
@@ -30,7 +30,6 @@
     name: 'Goal',
     data() {
         return {
-            deletedGoals: [],
             showDeletedGoals: false,
         };
     },
@@ -64,8 +63,10 @@
         listToShow(){
             let list = this.$store.getters.getList;
             if(list == 'goalList'){
+                this.showDeletedGoals = false;
                 return this.goalList.filter(goal => goal.deleted === false);
             }else{
+                this.showDeletedGoals = true;
                 return this.goalList.filter(goal => goal.deleted === true);
             }
         }
