@@ -27,6 +27,7 @@ export default {
       publicPath: process.env.BASE_URL
     }
   },
+
   methods:{
     fireMethod(payload){
       this.$parent.addGoalFB(payload);

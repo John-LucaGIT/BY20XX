@@ -15,7 +15,7 @@
                 <div class="bg-dark input-group-prepend">
                     <span class="text-light bg-dark input-group-text" id="inputGroup-sizing-lg">Enter Goal</span>
                 </div>
-                <input type="text" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
+                <input @click="toggleToast('init-info')" type="text" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
             </div>
       </div>
 
@@ -27,11 +27,18 @@
 
   import { stringLiteral } from '@babel/types';
   import Goal from './Goal.vue';
+  import { useToast } from "vue-toastification";
 
   export default {
     name: 'MainApp',
     components: {
       Goal,
+    },
+    setup() {
+      // Get toast interface
+      const toast = useToast();
+
+      return { toast }
     },
     data() {
         return {
@@ -54,24 +61,63 @@
 
     methods:{
       goalInput(action) {
-        if (document.getElementById('goalInput')){
-            this.goal = document.getElementById('goalInput').value;
-            this.$store.commit('addGoal', {
-              userid: "User1",
-              id: this.gid++,
-              text: this.goal,
-              status: this.status,
-              deleted: false,
-            });
-            this.goalList = this.$store.getters.getGoal;
+        if (document.getElementById('goalInput')) {
+          this.goal = document.getElementById('goalInput').value;
+          this.$store.commit('addGoal', {
+            userid: "User1",
+            id: this.gid++,
+            text: this.goal,
+            status: this.status,
+            deleted: false,
+          });
+          this.goalList = this.$store.getters.getGoal;
 
         }
+        this.toggleToast('goal');
       },
-
-      fireMethodDeleteHelper(payload){
+      toggleToast(toasti) {
+        switch(toasti){
+          case 'goal':
+            if (!this.$store.getters.getToast['goal']){
+              this.toast.success("You created your first goal! Click on overview to view and recover deleted goals.", {
+                position: "top-right",
+                timeout: 10000,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: false,
+                closeButton: "button",
+                icon: true,
+                rtl: false
+              });
+              this.$store.commit('setToast','goal');
+            }
+            break;
+          case 'init-info':
+            if (!this.$store.getters.getToast['init-info']){
+              this.toast.info("Click on a goal to delete it.", {
+                position: "top-right",
+                timeout: 10000,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: false,
+                closeButton: "button",
+                icon: true,
+                rtl: false
+              });
+              this.$store.commit('setToast','init-info');
+            }
+            break;
+        }
+      },
+      fireMethodDeleteHelper(payload) {
         this.$parent.fireMethodDelete(payload);
       },
-
       validateYear(event) {
         this.year = event.target.innerText;
         var re = /^\d{0,2}$/;
@@ -79,7 +125,7 @@
           event.target.innerText = this.year.slice(0, -1);
           this.year = this.year.slice(0, -1);
         }
-        this.$store.commit('setYear',{year: this.year});
+        this.$store.commit('setYear', { year: this.year });
       },
 
     },

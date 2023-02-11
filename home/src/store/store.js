@@ -7,7 +7,8 @@ export const store = new Vuex.Store({
     goalList: [],
     year: 'XX',
     list: 'goalList',
-    hasSynced: false
+    hasSynced: false,
+    toast: {},
   },
   mutations: {
     addGoal(state, payload){
@@ -20,7 +21,10 @@ export const store = new Vuex.Store({
       state.list = payload;
     },
     setHasSynced(state, value){
-      state.hasSynced = value
+      state.hasSynced = value;
+    },
+    setToast(state,value){
+      state.toast[value] = true;
     },
     setDeleted(state, gid){
       for(let e in state.goalList){
@@ -44,6 +48,9 @@ export const store = new Vuex.Store({
     },
     getList(state){
       return state.list;
+    },
+    getToast(state){
+      return state.toast;
     }
   },
 })
