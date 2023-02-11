@@ -8,9 +8,6 @@
   <button @click="getGoalsFB" class="btn btn-lg btn-warning">WHOW</button>
   <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
   <button @click="saveGoalsFB" class="btn btn-lg btn-success">SAVE</button>
-  <button @click="toggleToast" class="btn btn-lg btn-success">Toast</button>
-
-
 </template>
 
 <script>
