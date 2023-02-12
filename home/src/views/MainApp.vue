@@ -1,7 +1,7 @@
 <template>
   <div class="app">
       <div class="goal-title">
-        <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{this.year}}</h1>
+        <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{'XX' || this.year}}</h1>
       </div>
 
       <div id="goal-list">
