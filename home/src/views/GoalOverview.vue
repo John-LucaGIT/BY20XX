@@ -4,9 +4,9 @@
   </div>
 
   <div class="deleted-goals">
-    <h3 @click="checkThing()">Deleted Goals</h3>
+    <h3>Deleted Goals</h3>
     <div id="deleted-goal-list">
-        <Goal :deletedGoals="deletedGoals"></Goal>
+        <Goal :goalList="goalList"></Goal>
     </div>
   </div>
 
@@ -23,23 +23,18 @@ export default {
 
   data(){
     return{
-      deletedGoals: [],
+      goalList: [],
       showDeletedGoals: true,
     }
 
   },
   mounted() {
     if (this.$store) {
-      this.updateDeletedGoalList;
       this.$store.commit('setList', 'deletedGoals');
-      this.showDeletedGoals = true;
+      this.updateGoalList;
     }
   },
   methods:{
-    checkThing(){
-      console.log(this.deletedGoals);
-
-    },
     updateShowDeleted() {
       this.showDeletedGoals = true;
     }
@@ -47,12 +42,9 @@ export default {
 
 
   computed:{
-    updateDeletedGoalList(){
-        console.log('computed Goals:')
-        console.log(this.$store.getters.getDeletedGoal)
-        return this.deletedGoals = this.$store.getters.getDeletedGoal;
-
-    },
+    updateGoalList(){
+      return this.goalList = this.$store.getters.getGoal;
+    }
   },
 
 }

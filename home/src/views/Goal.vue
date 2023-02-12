@@ -13,7 +13,7 @@
                                 </div>
                             </div>
                             <div class="col col-sm text-center">
-                                <i v-if="showDeletedGoals === (listToShow === deletedGoals)" @click="toggleGoal(goalList.id)" :id="'check'+goalList.id" :key="goalList.id" :class="{ 'fa-solid fa-check' : goalList.status == false, 'fa-solid fa-times' : goalList.status}"></i>
+                                <i v-if="showDeletedGoals === false" @click="toggleGoal(goalList.id)" :id="'check'+goalList.id" :key="goalList.id" :class="{ 'fa-solid fa-check' : goalList.status == false, 'fa-solid fa-times' : goalList.status}"></i>
                             </div>
                         </div>
                     </div>
@@ -30,7 +30,6 @@
     name: 'Goal',
     data() {
         return {
-            deletedGoals: [],
             showDeletedGoals: false,
         };
     },
@@ -41,44 +40,9 @@
         }
     },
     methods:{
-
         deleteGoal(gid){
-            console.log('Result',this.showDeletedGoals);
-            let test = this.listToShow === this.deletedGoals;
-            console.log('out: ',test);
-            if (this.listToShow === this.deletedGoals){
-                console.log('undeleting');
-                for(let e = 0; e < this.deletedGoals.length; e++){
-                    if(this.deletedGoals[e].id == gid){
-                        this.$store.commit('addGoal', {
-                            userid: "User1",
-                            id: this.deletedGoals[e].id,
-                            text: this.deletedGoals[e].text,
-                            status: this.deletedGoals[e].status,
-                            deleted: false
-                        });
-                        this.deletedGoals.splice(e,1);
-                        // this.$emit('fireMethodDelete',{userid: "User1" , gid: this.deletedGoals[e].id});
-                    }
-                }
-            }else{
-                console.log('deleting');
-                for(let e = 0; e < this.goalList.length; e++){
-                    if(this.goalList[e].id == gid){
-                        this.$store.commit('addDeletedGoal', {
-                            userid: "User1",
-                            id: this.goalList[e].id,
-                            text: this.goalList[e].text,
-                            status: this.goalList[e].status,
-                            deleted: true
-                        });
-                        this.deletedGoals = this.$store.getters.getDeletedGoal;
-                        this.$emit('deleteFB',{userid: "User1" , gid: this.goalList[e].id});
-                        this.goalList.splice(e,1);
-                    }
-                }
-            }
-
+            console.log('calling delete');
+            this.$store.commit('setDeleted',gid);
         },
         toggleGoal(gid){
             for(let e = 0; e < this.goalList.length; e++){
@@ -99,9 +63,11 @@
         listToShow(){
             let list = this.$store.getters.getList;
             if(list == 'goalList'){
-                return this.goalList;
+                this.showDeletedGoals = false;
+                return this.goalList.filter(goal => goal.deleted === false);
             }else{
-                return this.deletedGoals;
+                this.showDeletedGoals = true;
+                return this.goalList.filter(goal => goal.deleted === true);
             }
         }
     }

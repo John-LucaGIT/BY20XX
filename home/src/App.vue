@@ -8,6 +8,7 @@
   <button @click="getGoalsFB" class="btn btn-lg btn-warning">WHOW</button>
   <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
   <button @click="saveGoalsFB" class="btn btn-lg btn-success">SAVE</button>
+  <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button>
 
 </template>
 
@@ -16,8 +17,7 @@
 import HomeView from './views/HomeView.vue';
 import FireDataService from "./assets/services/database";
 import { getGlobalThis } from '@vue/shared';
-
-// Initialize Firebase
+import { useToast } from "vue-toastification";
 
 
 export default {
@@ -33,7 +33,8 @@ export default {
       FireDataService.getGoals();
     },
     syncGoalsFB(){
-      FireDataService.syncGoals();
+      let uid = this.$store.getters.getUserID;
+      FireDataService.syncGoals(uid);
     },
     setDeletedFB(payload){
       FireDataService.setDeleted(payload);
@@ -42,9 +43,12 @@ export default {
       let payload = this.$store.getters.getGoal;
       console.log(payload);
       FireDataService.saveGoals(payload);
+    },
+    clearSession(){
+      sessionStorage.clear();
     }
 
-  }
+  },
 
 }
 </script>
