@@ -50,19 +50,21 @@ class FireDataService {
 
     async saveGoals(goals){
         const batch = writeBatch(db);
+        const userRef = doc(collection(db, "users"));
 
         goals.forEach(goal => {
-            const userRef = doc(collection(db, "users"), goal.userid);
             const goalRef = doc(collection(userRef, "goals"));
             batch.set(goalRef, {
-              id: goal.id,
               text: goal.text,
               status: goal.status,
               deleted: goal.deleted,
               date: Date.now()
             });
           });
-          await batch.commit();
+        await batch.commit();
+        store.commit('setUserID', userRef.id)
+        console.log(userRef.id);
+        return userRef.id;
 
     }
 

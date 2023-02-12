@@ -52,10 +52,11 @@
       if (this.$store) {
         this.updateGoalList;
         this.updateYear;
+        this.$store.commit('setYear', { year: this.year });
       }
       if (!this.hasSynced) {
         this.$emit('syncFB-goals');
-        this.$store.commit('setHasSynced', true)
+        this.$store.commit('setHasSynced', true);
       }
     },
 
