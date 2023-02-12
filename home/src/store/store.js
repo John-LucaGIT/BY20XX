@@ -8,7 +8,18 @@ export const store = new Vuex.Store({
     year: 'XX',
     list: 'goalList',
     hasSynced: false,
-    toast: {},
+    toast: JSON.parse(sessionStorage.getItem('toast')) || {},
+  },
+  actions: {
+    loadToast ({ state, commit }) {
+      let toast = state.toast;
+      if (!sessionStorage.getItem('toast')) {
+        sessionStorage.setItem('toast', JSON.stringify(toast));
+      } else {
+        toast = JSON.parse(sessionStorage.getItem('toast'));
+      }
+      commit('setToast', toast);
+    }
   },
   mutations: {
     addGoal(state, payload){
@@ -23,8 +34,9 @@ export const store = new Vuex.Store({
     setHasSynced(state, value){
       state.hasSynced = value;
     },
-    setToast(state,value){
+    setToast(state, value) {
       state.toast[value] = true;
+      sessionStorage.setItem('toast', JSON.stringify(state.toast));
     },
     setDeleted(state, gid){
       for(let e in state.goalList){
