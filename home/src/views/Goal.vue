@@ -41,10 +41,13 @@
     },
     methods:{
         deleteGoal(gid){
+            if(!this.showDeletedGoals)
+                this.$parent.toggleToast('viewer');
             console.log('calling delete');
             this.$store.commit('setDeleted',gid);
         },
         toggleGoal(gid){
+            this.$parent.toggleToast('viewer');
             for(let e = 0; e < this.goalList.length; e++){
                 if(this.goalList[e].id == gid){
                     this.goalList[e].status = !this.goalList[e].status;

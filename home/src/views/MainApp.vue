@@ -10,7 +10,7 @@
       </div>
 
 
-      <div class="goal-wrapper">
+      <div v-if="this.viewer == false" class="goal-wrapper">
             <div class="input-group bg-dark input-group-lg">
                 <div class="bg-dark input-group-prepend">
                     <span class="text-light bg-dark input-group-text" id="inputGroup-sizing-lg">Enter Goal</span>
@@ -46,7 +46,11 @@
           gid: 0,
           status: false,
           year: 'XX',
+          viewer: null,
         };
+    },
+    created(){
+      this.setViewer();
     },
     mounted() {
       if (this.$store) {
@@ -59,7 +63,6 @@
         this.$store.commit('setHasSynced', true);
       }
     },
-
     methods:{
       goalInput(action) {
         if (document.getElementById('goalInput')) {
@@ -75,6 +78,13 @@
 
         }
         this.toggleToast('goal');
+      },
+      setViewer() {
+        const id = new URL(location.href).searchParams.get('goal');
+        if (id != null && id != '') {
+          this.$store.commit('setViewState', true);
+        }
+        return this.viewer = this.$store.getters.getViewState;
       },
       toggleToast(toasti) {
         switch(toasti){
@@ -114,6 +124,25 @@
               this.$store.commit('setToast','init-info');
             }
             break;
+          case 'viewer':
+            if (this.viewer == true)
+              if (!this.$store.getters.getToast['viewer']){
+                this.toast.info("You are in viewer mode, your changes won't be saved.", {
+                  position: "top-right",
+                  timeout: 5000,
+                  closeOnClick: true,
+                  pauseOnFocusLoss: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  draggablePercent: 0.6,
+                  showCloseButtonOnHover: false,
+                  closeButton: "button",
+                  icon: true,
+                  rtl: false
+                });
+                this.$store.commit('setToast','viewer');
+              }
+              break;
         }
       },
       fireMethodDeleteHelper(payload) {
@@ -144,7 +173,7 @@
       },
       hasSynced(){
         return this.$store.state.hasSynced
-      }
+      },
     },
   }
 
