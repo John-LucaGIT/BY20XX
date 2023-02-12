@@ -1,9 +1,5 @@
 <template>
-  <!-- <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/">Overview</router-link>
-  </nav>
-  <router-view/> -->
+
   <HomeView></HomeView>
   <button @click="getGoalsFB" class="btn btn-lg btn-warning">WHOW</button>
   <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
@@ -17,13 +13,27 @@
 import HomeView from './views/HomeView.vue';
 import FireDataService from "./assets/services/database";
 import { getGlobalThis } from '@vue/shared';
-import { useToast } from "vue-toastification";
-
 
 export default {
   name: 'App',
   components: {
     HomeView
+  },
+  data(){
+    return{
+      userID: '',
+    }
+  },
+  computed: {
+    computedUserID() {
+      const id = new URL(location.href).searchParams.get('user');
+      console.log(id);
+
+      this.userID = id;
+      this.$store.commit('setUserID',this.userID);
+      return this.userID;
+    },
+
   },
   methods:{
     addGoalFB(payload){
@@ -33,8 +43,7 @@ export default {
       FireDataService.getGoals();
     },
     syncGoalsFB(){
-      let uid = this.$store.getters.getUserID;
-      FireDataService.syncGoals(uid);
+      FireDataService.syncGoals(this.computedUserID);
     },
     setDeletedFB(payload){
       FireDataService.setDeleted(payload);

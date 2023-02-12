@@ -4,7 +4,9 @@
       <a id="home" @click="changePage('home')" >Home</a> |
       <a id="overview" @click="changePage('overview')" >Overview</a>
     </nav>
-    <img class="lnd-logo" alt="By20XX logo" src="../assets/by20xx.png">
+    <a href="/">
+      <img class="lnd-logo" alt="By20XX logo" src="../assets/by20xx.png">
+    </a>
     <MainApp @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
     <GoalOverview v-if="page == 'overview'"></GoalOverview>
   </div>
