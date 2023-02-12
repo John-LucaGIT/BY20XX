@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
         list: 'goalList',
         userid: '',
         hasSynced: false,
+        viewer: false,
         toast: JSON.parse(sessionStorage.getItem('toast')) || {},
     },
     actions: {
@@ -50,6 +51,9 @@ export const store = new Vuex.Store({
                 }
             }
         },
+        setViewState(state,value){
+            state.viewer = value;
+        }
     },
     getters: {
         getState(state) {
@@ -70,6 +74,9 @@ export const store = new Vuex.Store({
         getUserID(state) {
             return state.userid;
         },
+        getViewState(state){
+            return state.viewer;
+        }
     },
 });
 

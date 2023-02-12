@@ -56,14 +56,15 @@ class FireDataService {
         goals.forEach(goal => {
             const goalRef = doc(collection(userRef, "goals"));
             batch.set(goalRef, {
-              text: goal.text,
-              status: goal.status,
-              deleted: goal.deleted,
-              date: Date.now()
+                id: goal.id,
+                text: goal.text,
+                status: goal.status,
+                deleted: goal.deleted,
+                date: Date.now()
             });
           });
         await batch.commit();
-        router.push({ path: '/', query: { user: userRef.id } });
+        router.push({ path: '/', query: { goal: userRef.id } });
         return userRef.id;
     }
 

@@ -3,7 +3,7 @@
   <HomeView></HomeView>
   <button @click="getGoalsFB" class="btn btn-lg btn-warning">WHOW</button>
   <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
-  <button @click="saveGoalsFB" class="btn btn-lg btn-success">SAVE</button>
+  <button v-if="viewer == false" @click="saveGoalsFB" class="btn btn-lg btn-success">SAVE</button>
   <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button>
 
 </template>
@@ -22,18 +22,23 @@ export default {
   data(){
     return{
       userID: '',
+      viewer: false,
     }
   },
   computed: {
     computedUserID() {
-      const id = new URL(location.href).searchParams.get('user');
+      const id = new URL(location.href).searchParams.get('goal');
       console.log(id);
 
       this.userID = id;
       this.$store.commit('setUserID',this.userID);
+      if(id != null && id != ''){
+        this.$store.commit('setViewState',true);
+      }
+      this.viewer = this.$store.getters.getViewState;
+
       return this.userID;
     },
-
   },
   methods:{
     addGoalFB(payload){
