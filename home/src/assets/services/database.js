@@ -1,6 +1,7 @@
 import { getFirestore, doc, getDoc, addDoc, updateDoc, writeBatch, collection, getDocs, query, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import {store} from '../../store/store';
+import router from '../../router/index';
 store.getters.config
 // => 'config'
 
@@ -31,7 +32,7 @@ class FireDataService {
         return goals;
     }
 
-    async syncGoals(userid="User1"){
+    async syncGoals(userid){
         const userRef = doc(collection(db, "users"), userid);
         const goalRef = collection(userRef, "goals");
         const querySnapshot = await getDocs(goalRef);
@@ -62,10 +63,8 @@ class FireDataService {
             });
           });
         await batch.commit();
-        store.commit('setUserID', userRef.id)
-        console.log(userRef.id);
+        router.push({ path: '/', query: { user: userRef.id } });
         return userRef.id;
-
     }
 
 

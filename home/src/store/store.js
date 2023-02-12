@@ -7,7 +7,7 @@ export const store = new Vuex.Store({
         goalList: [],
         year: 'XX',
         list: 'goalList',
-        userid: sessionStorage.getItem('userid') || '',
+        userid: '',
         hasSynced: false,
         toast: JSON.parse(sessionStorage.getItem('toast')) || {},
     },
@@ -21,15 +21,6 @@ export const store = new Vuex.Store({
             }
             commit('setToast', toast);
         },
-        loadUser({ state, commit }) {
-            let userid = state.userid;
-            if (!sessionStorage.getItem('userid')) {
-                sessionStorage.setItem('userid', userid);
-            } else {
-                userid = sessionStorage.getItem('userid');
-            }
-            commit('setUserID', userid);
-        },
     },
     mutations: {
         addGoal(state, payload) {
@@ -40,7 +31,6 @@ export const store = new Vuex.Store({
         },
         setUserID(state, id) {
             state.userid = id;
-            sessionStorage.setItem('userid', (state.userid));
         },
         setList(state, payload) {
             state.list = payload;
