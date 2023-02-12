@@ -23,15 +23,6 @@ const db = getFirestore(app);
 
 class FireDataService {
 
-    async getGoals(userid="User1") {
-        const userRef = doc(collection(db, "users"), userid);
-        const goalRef = collection(userRef, "goals");
-        const querySnapshot = await getDocs(goalRef);
-        const goals = querySnapshot.docs.map(doc => doc.data());
-        console.log(goals);
-        return goals;
-    }
-
     async syncGoals(userid){
         const userRef = doc(collection(db, "users"), userid);
         const goalRef = collection(userRef, "goals");
