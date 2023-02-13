@@ -62,6 +62,14 @@
         this.$emit('syncFB-goals');
         this.$store.commit('setHasSynced', true);
       }
+      setTimeout(() => {
+        this.setViewer();
+        if (this.viewer == true) {
+          let goals = this.$store.getters.getGoal;
+          if (goals <= 0)
+            this.toggleToast('no-goal');
+        }
+      }, 500)
     },
     methods:{
       goalInput(action) {
@@ -143,6 +151,27 @@
                 this.$store.commit('setToast','viewer');
               }
               break;
+          case 'no-goal':
+            console.log('hello');
+              if (!this.$store.getters.getToast['no-goal']){
+                console.log('toast');
+                this.toast.warning("The goal you are trying to view either does not exist or has been deleted.", {
+                  position: "top-right",
+                  timeout: 8000,
+                  closeOnClick: true,
+                  pauseOnFocusLoss: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  draggablePercent: 0.6,
+                  showCloseButtonOnHover: false,
+                  closeButton: "button",
+                  icon: true,
+                  rtl: false
+                });
+                this.$store.commit('setToast','no-goal');
+
+              }
+            break;
         }
       },
       fireMethodDeleteHelper(payload) {

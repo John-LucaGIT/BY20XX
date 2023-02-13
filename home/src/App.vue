@@ -1,6 +1,6 @@
 <template>
 
-  <HomeView></HomeView>
+  <HomeView @toastHelper="toggleToast"></HomeView>
   <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
   <button v-if="viewer == false" @click="saveGoalsFB" class="btn btn-lg btn-success">SAVE</button>
   <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button>
@@ -11,12 +11,18 @@
 // @ is an alias to /src
 import HomeView from './views/HomeView.vue';
 import FireDataService from "./assets/services/database";
-import { getGlobalThis } from '@vue/shared';
+import { useToast } from "vue-toastification";
 
 export default {
   name: 'App',
   components: {
     HomeView
+  },
+  setup() {
+    // Get toast interface
+    const toast = useToast();
+
+    return { toast }
   },
   data(){
     return{
@@ -59,6 +65,28 @@ export default {
     },
     clearSession(){
       sessionStorage.clear();
+    },
+    toggleToast(toasti) {
+      switch (toasti) {
+        case 'recover':
+          if (!this.$store.getters.getToast['recover']) {
+            this.toast.info("Click on a deleted goal to recover it.", {
+              position: "top-right",
+              timeout: 5000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: false,
+              closeButton: "button",
+              icon: true,
+              rtl: false
+            });
+            this.$store.commit('setToast', 'recover');
+          }
+          break;
+      }
     }
 
   },

@@ -47,12 +47,13 @@ export default {
           document.getElementById('overview').style.color='#4b8ff4';
           break;
         case 'overview':
+          this.$emit('toastHelper','recover');
           document.getElementById(setting).style.color='#42b983';
           document.getElementById('home').style.color='#4b8ff4';
           break;
       }
       this.page = setting;
-    }
+    },
   },
 }
 </script>
