@@ -1,8 +1,8 @@
 <template>
 
   <HomeView @toastHelper="toggleToast"></HomeView>
-  <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
-  <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button>
+  <!-- <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
+  <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button> -->
 
 </template>
 

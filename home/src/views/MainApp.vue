@@ -228,7 +228,7 @@ div.goal-wrapper{
     margin-right: auto;
     text-align: center;
     margin-top: 1rem;
-    margin-bottom: 5rem;
+    margin-bottom: 0.2rem;
 }
 
 input{

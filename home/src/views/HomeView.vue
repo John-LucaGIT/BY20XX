@@ -9,6 +9,8 @@
     </a>
     <MainApp @saveGoalsHelper="fireMethodSave" @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
     <GoalOverview v-if="page == 'overview'"></GoalOverview>
+    <Password></Password>
+
   </div>
 </template>
 
@@ -16,12 +18,15 @@
 // @ is an alias to /src
 import MainApp from './MainApp.vue';
 import GoalOverview from './GoalOverview.vue';
+import Password from './Password.vue';
+
 
 export default {
   name: 'HomeView',
   components: {
     MainApp,
     GoalOverview,
+    Password
   },
   data(){
     return{
