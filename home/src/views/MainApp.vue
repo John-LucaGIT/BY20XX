@@ -59,17 +59,13 @@
       }
 
       if (this.$store) {
-        this.updateGoalList;
-        this.updateYear;
+        await this.updateGoalList;
+        await this.updateYear;
       }
       setTimeout(() => {
         this.setViewer();
-        if (this.viewer == true) {
-          let goals = this.$store.getters.getGoal;
-          if (goals <= 0)
-            this.toggleToast('no-goal');
-        }
       }, 500)
+
     },
     methods:{
       goalInput(action) {
@@ -150,25 +146,6 @@
                 this.$store.commit('setToast','viewer');
               }
               break;
-          case 'no-goal':
-              if (!this.$store.getters.getToast['no-goal']){
-                this.toast.warning("The goal you are trying to view either does not exist or has been deleted.", {
-                  position: "top-right",
-                  timeout: 8000,
-                  closeOnClick: true,
-                  pauseOnFocusLoss: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  draggablePercent: 0.6,
-                  showCloseButtonOnHover: false,
-                  closeButton: "button",
-                  icon: true,
-                  rtl: false
-                });
-                this.$store.commit('setToast','no-goal');
-
-              }
-            break;
         }
       },
       fireMethodDeleteHelper(payload) {
