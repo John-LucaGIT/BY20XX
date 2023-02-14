@@ -52,16 +52,19 @@ export default {
     getGoalsFB(){
       FireDataService.getGoals();
     },
-    syncGoalsFB(){
-      FireDataService.syncGoals(this.computedUserID);
+    async syncGoalsFB(){
+      if(this.computedUserID && this.computedUserID != "" && this.computedUserID != null)
+        await FireDataService.syncGoals(this.computedUserID);
+        console.log(this.$store.getters.getYear)
     },
     setDeletedFB(payload){
       FireDataService.setDeleted(payload);
     },
     saveGoalsFB(){
       let payload = this.$store.getters.getGoal;
-      console.log(payload);
-      FireDataService.saveGoals(payload);
+      let additional = {year:false,password:false};
+      additional.year = this.$store.getters.getYear;
+      FireDataService.saveGoals(payload,additional);
     },
     clearSession(){
       sessionStorage.clear();

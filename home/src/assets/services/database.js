@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, addDoc, updateDoc, writeBatch, collection, getDocs, query, where } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, writeBatch, collection, getDocs, query, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import {store} from '../../store/store';
 import router from '../../router/index';
@@ -28,6 +28,27 @@ class FireDataService {
         const goalRef = collection(userRef, "goals");
         const querySnapshot = await getDocs(goalRef);
         const goals = querySnapshot.docs.map(doc => doc.data());
+
+        try {
+            const userDocRef = doc(db, "users", userRef.id); // Construct a DocumentReference to the user's document
+            const userDocSnapshot = await getDoc(userDocRef); // Retrieve the user's document
+            const additionalData = userDocSnapshot.data(); // Get the additional data from the document
+            console.log(additionalData);
+            if (additionalData){
+                if (additionalData.year && additionalData.year != ""){
+                    store.commit('setYear', additionalData.year);
+                    console.log("Year set:", additionalData.year);
+
+                }
+
+                if (additionalData.password && additionalData.password != ""){
+                    store.commit('setPasswd', additionalData.password);
+                }
+            }
+        } catch (e) {
+            console.error("Error retrieving user document: ", e);
+        }
+
         console.log(goals);
         for(let g in goals){
             store.commit('addGoal', {
@@ -40,24 +61,41 @@ class FireDataService {
         }
     }
 
-    async saveGoals(goals){
+    async saveGoals(goals,additional=false){
         const batch = writeBatch(db);
         const userRef = doc(collection(db, "users"));
 
-        goals.forEach(goal => {
-            const goalRef = doc(collection(userRef, "goals"));
-            batch.set(goalRef, {
-                id: goal.id,
-                text: goal.text,
-                status: goal.status,
-                deleted: goal.deleted,
-                date: Date.now()
-            });
-          });
-        await batch.commit();
-        router.push({ path: '/', query: { goal: userRef.id } });
-        return userRef.id;
+        if(goals.length > 0){
+            goals.forEach(goal => {
+                const goalRef = doc(collection(userRef, "goals"));
+                batch.set(goalRef, {
+                    id: goal.id,
+                    text: goal.text,
+                    status: goal.status,
+                    deleted: goal.deleted,
+                    date: Date.now()
+                });
+              });
+            await batch.commit();
+
+            if(additional)
+              if(additional.year && additional.year != "XX" && additional.year != "")
+                try {
+                    const userDocRef = doc(db, "users", userRef.id); // Construct a DocumentReference to the user's document
+                    const docRef = await setDoc(userDocRef, {
+                        year: additional.year,
+                        password: additional.password,
+                    });
+                } catch (e) {
+                    console.error("Error adding document: ", e);
+                }
+
+            router.push({ path: '/', query: { goal: userRef.id } });
+            console.log(additional)
+            return userRef.id;
+        }
     }
+
 
 
     async setDeleted(payload){

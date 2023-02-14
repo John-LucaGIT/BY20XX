@@ -34,8 +34,8 @@ export default {
     fireMethod(payload){
       this.$parent.addGoalFB(payload);
     },
-    fireMethodGet(){
-      this.$parent.syncGoalsFB();
+    async fireMethodGet(){
+      await this.$parent.syncGoalsFB();
     },
     fireMethodDelete(payload){
       this.$parent.setDeletedFB(payload);

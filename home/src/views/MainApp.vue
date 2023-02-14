@@ -1,14 +1,12 @@
 <template>
   <div class="app">
       <div class="goal-title">
-        <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{'XX' || this.year}}</h1>
+        <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{this.year}}</h1>
       </div>
 
       <div id="goal-list">
         <Goal @deleteFB="fireMethodDeleteHelper" :goalList="goalList"></Goal>
-
       </div>
-
 
       <div v-if="this.viewer == false" class="goal-wrapper">
             <div class="input-group bg-dark input-group-lg">
@@ -45,22 +43,26 @@
           goalList: [],
           gid: 0,
           status: false,
-          year: 'XX',
+          year: '',
           viewer: null,
         };
     },
     created(){
       this.setViewer();
     },
-    mounted() {
+    async mounted() {
+
+      console.log('hello',this.hasSynced);
+      if (!this.hasSynced) {
+        console.log('syncing')
+        await this.$emit('syncFB-goals');
+        this.$store.commit('setHasSynced', true);
+        console.log('current year',this.$store.getters.getYear)
+      }
+
       if (this.$store) {
         this.updateGoalList;
         this.updateYear;
-        this.$store.commit('setYear', { year: this.year });
-      }
-      if (!this.hasSynced) {
-        this.$emit('syncFB-goals');
-        this.$store.commit('setHasSynced', true);
       }
       setTimeout(() => {
         this.setViewer();
@@ -76,7 +78,6 @@
         if (document.getElementById('goalInput')) {
           this.goal = document.getElementById('goalInput').value;
           this.$store.commit('addGoal', {
-            userid: "User1",
             id: this.gid++,
             text: this.goal,
             status: this.status,
@@ -152,7 +153,6 @@
               }
               break;
           case 'no-goal':
-            console.log('hello');
               if (!this.$store.getters.getToast['no-goal']){
                 console.log('toast');
                 this.toast.warning("The goal you are trying to view either does not exist or has been deleted.", {
@@ -184,17 +184,21 @@
           event.target.innerText = this.year.slice(0, -1);
           this.year = this.year.slice(0, -1);
         }
-        this.$store.commit('setYear', { year: this.year });
+        console.log('setting new year');
+        this.$store.commit('setYear', this.year );
       },
 
     },
+
     computed:{
       updateGoalList(){
         console.log('computed')
+        this.year = this.$store.getters.getYear;
         return this.goalList = this.$store.getters.getGoal;
       },
       updateYear(){
-        let fetchedYear = this.$store.getters.getYear.year;
+        let fetchedYear = this.$store.getters.getYear;
+        console.log('fetched',fetchedYear);
         if(fetchedYear == ''){
           fetchedYear = 'XX';
         }
@@ -203,6 +207,7 @@
       hasSynced(){
         return this.$store.state.hasSynced
       },
+
     },
   }
 
