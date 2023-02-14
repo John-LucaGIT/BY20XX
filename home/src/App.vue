@@ -57,11 +57,12 @@ export default {
       if(this.computedUserID && this.computedUserID != "" && this.computedUserID != null)
         await FireDataService.syncGoals(this.computedUserID);
 
-      setTimeout(() => {
-        let goals = this.$store.getters.getGoal;
-        if (goals.length <= 0)
-          this.toggleToast('no-goal');
-      }, 500)
+      if (this.viewer)
+        setTimeout(() => {
+          let goals = this.$store.getters.getGoal;
+          if (goals.length <= 0)
+            this.toggleToast('no-goal');
+        }, 500)
     },
     setDeletedFB(payload){
       FireDataService.setDeleted(payload);
