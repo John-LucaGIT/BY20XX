@@ -1,7 +1,7 @@
 <template>
   <div class="app">
       <div class="goal-title">
-        <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{this.year}}</h1>
+        <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{this.$store.getters.getYear}}</h1>
       </div>
 
       <div id="goal-list">
@@ -52,26 +52,20 @@
     },
     async mounted() {
 
-      console.log('hello',this.hasSynced);
       if (!this.hasSynced) {
         console.log('syncing')
         await this.$emit('syncFB-goals');
         this.$store.commit('setHasSynced', true);
-        console.log('current year',this.$store.getters.getYear)
       }
 
       if (this.$store) {
-        this.updateGoalList;
-        this.updateYear;
+        await this.updateGoalList;
+        await this.updateYear;
       }
       setTimeout(() => {
         this.setViewer();
-        if (this.viewer == true) {
-          let goals = this.$store.getters.getGoal;
-          if (goals <= 0)
-            this.toggleToast('no-goal');
-        }
       }, 500)
+
     },
     methods:{
       goalInput(action) {
@@ -152,26 +146,6 @@
                 this.$store.commit('setToast','viewer');
               }
               break;
-          case 'no-goal':
-              if (!this.$store.getters.getToast['no-goal']){
-                console.log('toast');
-                this.toast.warning("The goal you are trying to view either does not exist or has been deleted.", {
-                  position: "top-right",
-                  timeout: 8000,
-                  closeOnClick: true,
-                  pauseOnFocusLoss: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  draggablePercent: 0.6,
-                  showCloseButtonOnHover: false,
-                  closeButton: "button",
-                  icon: true,
-                  rtl: false
-                });
-                this.$store.commit('setToast','no-goal');
-
-              }
-            break;
         }
       },
       fireMethodDeleteHelper(payload) {
@@ -184,7 +158,6 @@
           event.target.innerText = this.year.slice(0, -1);
           this.year = this.year.slice(0, -1);
         }
-        console.log('setting new year');
         this.$store.commit('setYear', this.year );
       },
 
@@ -198,7 +171,6 @@
       },
       updateYear(){
         let fetchedYear = this.$store.getters.getYear;
-        console.log('fetched',fetchedYear);
         if(fetchedYear == ''){
           fetchedYear = 'XX';
         }

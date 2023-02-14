@@ -43,7 +43,6 @@
         deleteGoal(gid){
             if(!this.showDeletedGoals)
                 this.$parent.toggleToast('viewer');
-            console.log('calling delete');
             this.$store.commit('setDeleted',gid);
         },
         toggleGoal(gid){

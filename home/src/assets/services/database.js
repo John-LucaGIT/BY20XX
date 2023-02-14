@@ -37,8 +37,6 @@ class FireDataService {
             if (additionalData){
                 if (additionalData.year && additionalData.year != ""){
                     store.commit('setYear', additionalData.year);
-                    console.log("Year set:", additionalData.year);
-
                 }
 
                 if (additionalData.password && additionalData.password != ""){
