@@ -55,7 +55,6 @@ export default {
     async syncGoalsFB(){
       if(this.computedUserID && this.computedUserID != "" && this.computedUserID != null)
         await FireDataService.syncGoals(this.computedUserID);
-        console.log(this.$store.getters.getYear)
     },
     setDeletedFB(payload){
       FireDataService.setDeleted(payload);
