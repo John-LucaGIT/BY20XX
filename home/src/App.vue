@@ -12,6 +12,9 @@
 import HomeView from './views/HomeView.vue';
 import FireDataService from "./assets/services/database";
 import { useToast } from "vue-toastification";
+import bcrypt from 'bcryptjs';
+
+
 
 export default {
   name: 'App',
@@ -42,6 +45,8 @@ export default {
         this.$store.commit('setViewState',true);
       }
       this.viewer = this.$store.getters.getViewState;
+      console.log(this.encryptPassword("bananas"));
+
 
       return this.userID;
     },
@@ -49,6 +54,10 @@ export default {
   methods:{
     addGoalFB(payload){
       FireDataService.addGoal(payload.userid, payload.id, payload.goal, payload.status, payload.deleted);
+    },
+    encryptPassword(password){
+      const salt = bcrypt.genSaltSync(10)
+      return bcrypt.hashSync(password, salt)
     },
     getGoalsFB(){
       FireDataService.getGoals();

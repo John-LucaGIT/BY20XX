@@ -2,6 +2,7 @@ import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, writeBatch, colle
 import { initializeApp } from 'firebase/app';
 import {store} from '../../store/store';
 import router from '../../router/index';
+
 store.getters.config
 // => 'config'
 
@@ -19,6 +20,29 @@ var firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+
+// const saltRounds = 10;
+// const myPlaintextPassword = 's0/\/\P4$$w0rD';
+
+// bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
+//     // Store hash in your password DB.
+//     console.log('Hashed password:', hash);
+// });
+
+
+const validateGoal = (goal) => {
+    const regex = /^[a-zA-Z ]{1,50}$/; // only allows alphabets and spaces, up to 50 characters
+    if(regex.test(goal)){
+        return goal;
+    }
+}
+
+const validateYear = (year) => {
+    const regex = /^[0-9]{2}$/; // only allows integers, exactly 2 characters
+    if(regex.test(year)){
+        return year;
+    }
+}
 
 
 class FireDataService {
@@ -59,6 +83,8 @@ class FireDataService {
         }
     }
 
+
+
     async saveGoals(goals,additional=false){
         const batch = writeBatch(db);
         const userRef = doc(collection(db, "users"));
@@ -68,7 +94,7 @@ class FireDataService {
                 const goalRef = doc(collection(userRef, "goals"));
                 batch.set(goalRef, {
                     id: goal.id,
-                    text: goal.text,
+                    text: validateGoal(goal.text),
                     status: goal.status,
                     deleted: goal.deleted,
                     date: Date.now()
@@ -81,7 +107,7 @@ class FireDataService {
                 try {
                     const userDocRef = doc(db, "users", userRef.id); // Construct a DocumentReference to the user's document
                     const docRef = await setDoc(userDocRef, {
-                        year: additional.year,
+                        year: validateYear(additional.year),
                         password: additional.password,
                     });
                 } catch (e) {

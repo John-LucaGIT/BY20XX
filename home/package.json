@@ -9,7 +9,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
+    "bcryptjs": "^2.4.3",
     "core-js": "^3.8.3",
+    "crypto-browserify": "^3.12.0",
     "dotenv": "^16.0.3",
     "encoding": "^0.1.13",
     "firebase": "^9.16.0",
@@ -32,6 +34,7 @@
     "sass": "^1.32.7",
     "sass-embedded": "^1.57.1",
     "sass-loader": "^12.0.0",
-    "utf-8-validate": "^6.0.2"
+    "utf-8-validate": "^6.0.2",
+    "webpack": "^5.75.0"
   }
 }

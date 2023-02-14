@@ -6,6 +6,7 @@
 
       <div id="goal-list">
         <Goal @deleteFB="fireMethodDeleteHelper" :goalList="goalList"></Goal>
+        <span style="color:red" v-if="error.goal">{{error.goal}}</span>
       </div>
 
       <div v-if="this.viewer == false" class="goal-wrapper">
@@ -13,7 +14,7 @@
                 <div class="bg-dark input-group-prepend" id="input-descrp-lnd">
                     <span class="text-light bg-dark input-group-text" id="inputGroup-sizing-lg">Enter Goal</span>
                 </div>
-                <input @click="toggleToast('init-info')" type="text" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
+                <input @click="toggleToast('init-info')" type="text" @keyup="forceGoalLength" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
             </div>
       </div>
 
@@ -45,6 +46,7 @@
           status: false,
           year: '',
           viewer: null,
+          error: [],
         };
     },
     created(){
@@ -71,16 +73,42 @@
       goalInput(action) {
         if (document.getElementById('goalInput')) {
           this.goal = document.getElementById('goalInput').value;
-          this.$store.commit('addGoal', {
-            id: this.gid++,
-            text: this.goal,
-            status: this.status,
-            deleted: false,
-          });
-          this.goalList = this.$store.getters.getGoal;
-
+          if (this.validateGoal(this.goal))
+            this.$store.commit('addGoal', {
+              id: this.gid++,
+              text: this.goal,
+              status: this.status,
+              deleted: false,
+            });
+            this.goalList = this.$store.getters.getGoal;
         }
         this.toggleToast('goal');
+      },
+      validateGoal(value){
+        if (value.length > 50){
+          this.error['goal'] = "Goal's may not exceed 50 characters!";
+          return false;
+        }
+        var re = RegExp(/^[\w\s-]{0,50}$/);
+        if (!re.test(value)) {
+          this.error['goal'] = "Goal's may not contain special characters!";
+          return false;
+        }
+
+        else{
+          return true;
+        }
+      },
+      forceGoalLength(event) {
+        let goaltext = event.target.value;
+        var re = RegExp(/^[\w\s-]{0,50}$/);
+        if (!re.test(goaltext)) {
+          event.target.value = goaltext.slice(0, -1);
+          goaltext = goaltext.slice(0, -1);
+          this.error['goal'] = "Goal's may not exceed 50 characters or contain special characters!";
+        }else{
+          this.error['goal'] = null;
+        }
       },
       setViewer() {
         const id = new URL(location.href).searchParams.get('goal');
