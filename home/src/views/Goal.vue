@@ -135,4 +135,10 @@ h3.completed{
     text-decoration: line-through;
     color: #42b983;
 }
+@media (max-width: 480px) {
+    .scrollable {
+        height: 20rem;
+    }
+}
+
 </style>

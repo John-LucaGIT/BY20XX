@@ -2,7 +2,6 @@
 
   <HomeView @toastHelper="toggleToast"></HomeView>
   <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
-  <button v-if="viewer == false" @click="saveGoalsFB" class="btn btn-lg btn-success">SAVE</button>
   <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button>
 
 </template>
@@ -12,6 +11,9 @@
 import HomeView from './views/HomeView.vue';
 import FireDataService from "./assets/services/database";
 import { useToast } from "vue-toastification";
+import bcrypt from 'bcryptjs';
+
+
 
 export default {
   name: 'App',
@@ -42,6 +44,8 @@ export default {
         this.$store.commit('setViewState',true);
       }
       this.viewer = this.$store.getters.getViewState;
+      console.log(this.encryptPassword("bananas"));
+
 
       return this.userID;
     },
@@ -49,6 +53,10 @@ export default {
   methods:{
     addGoalFB(payload){
       FireDataService.addGoal(payload.userid, payload.id, payload.goal, payload.status, payload.deleted);
+    },
+    encryptPassword(password){
+      const salt = bcrypt.genSaltSync(10)
+      return bcrypt.hashSync(password, salt)
     },
     getGoalsFB(){
       FireDataService.getGoals();
@@ -159,5 +167,13 @@ nav {
     }
   }
 }
+
+@media (max-width: 480px) {
+  #app {
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+}
+
 </style>
 

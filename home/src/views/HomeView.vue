@@ -7,7 +7,7 @@
     <a href="/">
       <img class="lnd-logo" alt="By20XX logo" src="../assets/by20xx.png">
     </a>
-    <MainApp @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
+    <MainApp @saveGoalsHelper="fireMethodSave" @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
     <GoalOverview v-if="page == 'overview'"></GoalOverview>
   </div>
 </template>
@@ -39,6 +39,9 @@ export default {
     },
     fireMethodDelete(payload){
       this.$parent.setDeletedFB(payload);
+    },
+    fireMethodSave(){
+      this.$parent.saveGoalsFB();
     },
     changePage(setting){
       switch(setting){
@@ -75,6 +78,14 @@ export default {
     filter: drop-shadow(16px 8px 16px black);
   }
 
+
+  /* Logo styles for mobile devices */
+  @media (max-width: 767px) {
+    .lnd-logo {
+      width: 250px; /* adjust to the desired size */
+      height: auto;
+    }
+  }
 
 </style>
 
