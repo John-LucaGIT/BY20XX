@@ -1,7 +1,7 @@
 <template>
   <div class="app">
       <div class="goal-title">
-        <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{this.$store.getters.getYear}}</h1>
+        <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{this.$store.getters.getYear || 'XX'}}</h1>
       </div>
 
       <div id="goal-list">
@@ -10,7 +10,7 @@
 
       <div v-if="this.viewer == false" class="goal-wrapper">
             <div class="input-group bg-dark input-group-lg">
-                <div class="bg-dark input-group-prepend">
+                <div class="bg-dark input-group-prepend" id="input-descrp-lnd">
                     <span class="text-light bg-dark input-group-text" id="inputGroup-sizing-lg">Enter Goal</span>
                 </div>
                 <input @click="toggleToast('init-info')" type="text" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
@@ -204,11 +204,56 @@ div.goal-wrapper{
 
 input{
     text-align: center;
+    border: none;
+}
+
+
+span.text-light.bg-dark.input-group-text{
+  border: none;
+}
+
+span.text-light.bg-dark.input-group-text:focus{
+  border: none;
+  box-shadow: none;
+}
+.form-control:focus{
+  box-shadow: none;
 }
 
 div.goal-title h1{
   display: inline;
 }
+
+/* Adjust the font size and line height for mobile devices */
+@media (max-width: 480px) {
+  form {
+    font-size: 16px;
+  }
+
+  #input-descrp-lnd{
+    display: none;
+  }
+
+  input, select, textarea {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  div.goal-wrapper{
+    width: 80%;
+  }
+}
+
+/* Reduce the width of the form elements on mobile devices */
+@media (max-width: 576px) {
+  input, select, textarea {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+
+
 
 
 </style>

@@ -159,5 +159,13 @@ nav {
     }
   }
 }
+
+@media (max-width: 480px) {
+  #app {
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+}
+
 </style>
 

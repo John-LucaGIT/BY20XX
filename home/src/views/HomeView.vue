@@ -76,6 +76,14 @@ export default {
   }
 
 
+  /* Logo styles for mobile devices */
+  @media (max-width: 767px) {
+    .lnd-logo {
+      width: 250px; /* adjust to the desired size */
+      height: auto;
+    }
+  }
+
 </style>
 
 
