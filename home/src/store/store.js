@@ -5,7 +5,7 @@ import Vuex from 'vuex';
 export const store = new Vuex.Store({
     state: {
         goalList: [],
-        year: 'XX',
+        year: '',
         list: 'goalList',
         userid: '',
         hasSynced: false,
@@ -27,8 +27,8 @@ export const store = new Vuex.Store({
         addGoal(state, payload) {
             state.goalList.push(payload);
         },
-        setYear(state, payload) {
-            state.year = payload;
+        setYear(state, value) {
+            state.year = value;
         },
         setUserID(state, id) {
             state.userid = id;

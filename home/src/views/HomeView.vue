@@ -34,8 +34,8 @@ export default {
     fireMethod(payload){
       this.$parent.addGoalFB(payload);
     },
-    fireMethodGet(){
-      this.$parent.syncGoalsFB();
+    async fireMethodGet(){
+      await this.$parent.syncGoalsFB();
     },
     fireMethodDelete(payload){
       this.$parent.setDeletedFB(payload);
@@ -47,12 +47,13 @@ export default {
           document.getElementById('overview').style.color='#4b8ff4';
           break;
         case 'overview':
+          this.$emit('toastHelper','recover');
           document.getElementById(setting).style.color='#42b983';
           document.getElementById('home').style.color='#4b8ff4';
           break;
       }
       this.page = setting;
-    }
+    },
   },
 }
 </script>
