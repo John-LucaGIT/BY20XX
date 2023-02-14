@@ -2,7 +2,6 @@
 
   <HomeView @toastHelper="toggleToast"></HomeView>
   <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
-  <button v-if="viewer == false" @click="saveGoalsFB" class="btn btn-lg btn-success">SAVE</button>
   <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button>
 
 </template>

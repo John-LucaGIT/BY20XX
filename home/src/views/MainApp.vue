@@ -15,6 +15,7 @@
                     <span class="text-light bg-dark input-group-text" id="inputGroup-sizing-lg">Enter Goal</span>
                 </div>
                 <input @click="toggleToast('init-info')" type="text" @keyup="forceGoalLength" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
+                <button v-if="viewer == false" @click="this.$emit('saveGoalsHelper')" class="btn btn"><i class="fa-solid fa-floppy-disk"></i></button>
             </div>
       </div>
 
@@ -281,7 +282,30 @@ div.goal-title h1{
 }
 
 
+.fa-floppy-disk{
+  font-size: 1.4rem;
+  color: white;
+}
 
+button.btn:focus,button.btn:active{
+  box-shadow: none;
+  border: none;
+  outline: none;
+  border-style: none;
+}
 
+button.btn:visited > .fa-floppy-disk{
+  color: #42b983;
+}
+
+/* mouse over link */
+button.btn:hover > .fa-floppy-disk {
+  color: #42b983;
+}
+
+/* selected link */
+button.btn:active > .fa-floppy-disk{
+  color: #42b983;
+}
 
 </style>
