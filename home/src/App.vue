@@ -78,10 +78,15 @@ export default {
         this.toggleToast('goal-set');
       }
     },
-    setPassword(passw){
-      this.password = passw;
-      this.toggleToast('password-set');
-
+    async setPassword(passw,isviewer){
+      if(isviewer){
+        let auth = await FireDataService.unlockGoal(passw);
+        console.log(auth);
+        this.toggleToast('password-unlocked');
+      }else{
+        this.password = await passw;
+        this.toggleToast('password-set');
+      }
     },
     clearSession(){
       sessionStorage.clear();
@@ -141,6 +146,24 @@ export default {
               rtl: false
             });
             this.$store.commit('setToast','password-set');
+          }
+        break;
+        case 'password-unlock':
+          if (!this.$store.getters.getToast['password-unlock']){
+            this.toast.success("You have successfully unlocked your goal for editing!", {
+              position: "top-right",
+              timeout: 10000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: false,
+              closeButton: "button",
+              icon: true,
+              rtl: false
+            });
+            this.$store.commit('setToast','password-unlock');
           }
         break;
         case 'goal-set':
@@ -208,6 +231,11 @@ nav {
     padding-left: 2%;
     padding-right: 2%;
   }
+}
+
+.error-message{
+    font-family: 'Courier New', Courier, monospace;
+    color: red;
 }
 
 </style>

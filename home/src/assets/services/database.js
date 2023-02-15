@@ -2,6 +2,8 @@ import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, writeBatch, colle
 import { initializeApp } from 'firebase/app';
 import {store} from '../../store/store';
 import router from '../../router/index';
+import bcrypt from 'bcryptjs';
+
 
 store.getters.config
 // => 'config'
@@ -21,13 +23,33 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-// const saltRounds = 10;
-// const myPlaintextPassword = 's0/\/\P4$$w0rD';
+function bcompare(password, hashedPassword){
+    return new Promise((resolve, reject) => {
 
-// bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-//     // Store hash in your password DB.
-//     console.log('Hashed password:', hash);
-// });
+        bcrypt.compare(password, hashedPassword,
+            async function (err, isMatch) {
+
+            // Comparing the original password to
+            // encrypted password
+            if (isMatch) {
+                console.log('Password match');
+                resolve(true);
+            }
+
+            if (!isMatch) {
+                // If password doesn't match the following
+                // message will be sent
+                console.log('Password missmatch');
+                resolve(false);
+            }
+
+            if (err) {
+                reject(err);
+            }
+        })
+    })
+}
+
 
 
 const validateGoal = (goal) => {
@@ -38,6 +60,9 @@ const validateGoal = (goal) => {
 }
 
 const validateYear = (year) => {
+    if(year == false){
+        return false;
+    }
     const regex = /^[0-9]{2}$/; // only allows integers, exactly 2 characters
     if(regex.test(year)){
         return year;
@@ -100,10 +125,18 @@ class FireDataService {
                     date: Date.now()
                 });
               });
-            await batch.commit();
+              await batch.commit();
+              "$2a$10$ruBn6VWKgzfvX/3UaVqhuuuGyKBNap9877K8aQrXYeb70zxpGcP1m"
 
             if(additional)
-              if(additional.year && additional.year != "XX" && additional.year != "")
+              console.log(additional);
+              if(additional.year && additional.year != "XX" && additional.year != "" || additional.password && additional.password != ""){
+                if(!additional.year){
+                    additional.year = false;
+                }
+                if(!additional.password){
+                    additional.password = false;
+                }
                 try {
                     const userDocRef = doc(db, "users", userRef.id); // Construct a DocumentReference to the user's document
                     const docRef = await setDoc(userDocRef, {
@@ -113,10 +146,27 @@ class FireDataService {
                 } catch (e) {
                     console.error("Error adding document: ", e);
                 }
+              }
 
             router.push({ path: '/', query: { goal: userRef.id } });
             console.log(additional)
+
             return userRef.id;
+        }
+    }
+
+    async unlockGoal(passwd){
+        try {
+            const userid = store.getters.getUserID;
+            const userRef = doc(collection(db, "users"), userid);
+            const userDocRef = doc(db, "users", userRef.id); // Construct a DocumentReference to the user's document
+            const userDocSnapshot = await getDoc(userDocRef); // Retrieve the user's document
+            const additionalData = userDocSnapshot.data(); // Get the additional data from the document
+            if (additionalData && additionalData.password != false && additionalData.password != ""){
+                return bcompare(passwd,additionalData.password);
+            }
+        } catch (e) {
+            console.error("Error retrieving user document: ", e);
         }
     }
 
@@ -155,9 +205,6 @@ class FireDataService {
 
     }
 
-    async setAdditional(payload){
-        let passwd = payload.password;
-    }
 }
 
 export default new FireDataService();

@@ -8,6 +8,7 @@
             <div class="slider" v-if="isActive" ref="slider"></div>
         </div>
         <form @submit.prevent="submitForm">
+            <p class="error-message">{{ error }}</p>
             <input type="password" v-model="password" v-if="isActive" placeholder="Enter password">
         </form>
 
@@ -28,6 +29,7 @@ export default {
             password: '',
             isPasswordSet: false,
             message: 'Swipe up to set password',
+            error: '',
         };
     },
     mounted() {
@@ -39,6 +41,14 @@ export default {
         }else{
             this.message = 'Click to set password';
         }
+        if(this.$store.getters.getViewState){
+            if(this.isMobile()){
+                this.message = 'Swipe up to enter password';
+            }else{
+                this.message = 'Click to enter password';
+            }
+        }
+
     },
     beforeDestroy() {
         window.removeEventListener('scroll', this.handleScroll);
@@ -52,9 +62,7 @@ export default {
             }
         },
         handleClick() {
-            if (!this.isPasswordSet) {
-                this.isActive = true;
-            }
+            this.isActive = !this.isActive;
         },
         isMobile(){
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -63,12 +71,22 @@ export default {
             const salt = bcrypt.genSaltSync(10)
             return bcrypt.hashSync(password, salt)
         },
+        isValidPassword(password) {
+            const passwordRegex = /^.{6,25}$/;
+            return passwordRegex.test(password);
+        },
         async submitForm() {
-            this.password = await this.encryptPassword(this.password);
-            console.log(this.password);
-            this.isActive = false;
-            this.isPasswordSet = true;
-            this.$emit('passwordHelper',this.password);
+            if(this.isValidPassword(this.password)){
+                if(this.$store.getters.getViewState == false){
+                    this.password = await this.encryptPassword(this.password);
+                }
+                this.isActive = false;
+                this.isPasswordSet = true;
+                let isviewer = this.$store.getters.getViewState;
+                this.$emit('passwordHelper',this.password,isviewer);
+            }else{
+                this.error = 'Password must be between 6-25 characters!';
+            }
         },
 
 
@@ -144,4 +162,5 @@ export default {
 div.text {
     color: #787272;
 }
+
 </style>

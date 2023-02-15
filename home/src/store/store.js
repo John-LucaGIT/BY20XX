@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
         hasSynced: false,
         viewer: false,
         toast: JSON.parse(sessionStorage.getItem('toast')) || {},
+        password: false,
     },
     actions: {
         loadToast({ state, commit }) {
@@ -53,6 +54,9 @@ export const store = new Vuex.Store({
         },
         setViewState(state,value){
             state.viewer = value;
+        },
+        setPasswd(state,passwd){
+            state.password = passwd;
         }
     },
     getters: {
@@ -76,6 +80,9 @@ export const store = new Vuex.Store({
         },
         getViewState(state){
             return state.viewer;
+        },
+        getPassword(state){
+            return state.password;
         }
     },
 });

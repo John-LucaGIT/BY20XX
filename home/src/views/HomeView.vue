@@ -9,7 +9,7 @@
     </a>
     <MainApp @saveGoalsHelper="fireMethodSave" @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
     <GoalOverview v-if="page == 'overview'"></GoalOverview>
-    <Password v-if="this.$store.getters.getViewState == false" @passwordHelper="setParentPasswd"></Password>
+    <Password v-if="this.$store.getters.getPassword || this.$store.getters.getViewState == false" @passwordHelper="setParentPasswd"></Password>
 
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
   data(){
     return{
       page: 'home',
-      publicPath: process.env.BASE_URL
+      publicPath: process.env.BASE_URL,
     }
   },
   methods:{
@@ -47,9 +47,8 @@ export default {
     async fireMethodSave(){
       this.$parent.saveGoalsFB();
     },
-    async setParentPasswd(value){
-      console.log(value);
-      this.$parent.setPassword(value);
+    async setParentPasswd(value,isviewer){
+      this.$parent.setPassword(value,isviewer);
     },
     changePage(setting){
       switch(setting){
