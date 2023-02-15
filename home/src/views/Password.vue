@@ -58,7 +58,7 @@ export default {
     methods: {
         handleScroll() {
             if (window.scrollY > 100 && !this.isPasswordSet) {
-                this.isActive = true;
+                this.isActive = !this.isActive;
             }
         },
         handleClick() {

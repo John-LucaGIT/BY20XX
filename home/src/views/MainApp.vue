@@ -9,13 +9,13 @@
         <span class="error-message" v-if="error.goal">{{error.goal}}</span>
       </div>
 
-      <div v-if="this.viewer == false" class="goal-wrapper">
+      <div v-if="this.viewer == false || this.editValue" class="goal-wrapper">
             <div class="input-group bg-dark input-group-lg">
                 <div class="bg-dark input-group-prepend" id="input-descrp-lnd">
                     <span class="text-light bg-dark input-group-text" id="inputGroup-sizing-lg">Enter Goal</span>
                 </div>
                 <input @click="toggleToast('init-info')" type="text" @keyup="forceGoalLength" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
-                <button v-if="viewer == false" @click="this.$emit('saveGoalsHelper')" class="btn btn"><i class="fa-solid fa-floppy-disk"></i></button>
+                <button v-if="viewer == false || this.editValue" @click="this.$emit('saveGoalsHelper')" class="btn btn"><i class="fa-solid fa-floppy-disk"></i></button>
             </div>
       </div>
 
@@ -28,9 +28,14 @@
   import { stringLiteral } from '@babel/types';
   import Goal from './Goal.vue';
   import { useToast } from "vue-toastification";
+  import { nextTick } from 'vue'
+
 
   export default {
     name: 'MainApp',
+    props: {
+      editValue: Boolean
+    },
     components: {
       Goal,
     },
@@ -64,6 +69,7 @@
       if (this.$store) {
         await this.updateGoalList;
         await this.updateYear;
+        await this.updateEdit;
       }
       setTimeout(() => {
         this.setViewer();
@@ -206,10 +212,20 @@
         }
         return this.year = fetchedYear;
       },
+      updateEdit(){
+        this.$store.commit('setEdit',this.editValue)
+      },
       hasSynced(){
         return this.$store.state.hasSynced
       },
-
+      getEdit: {
+        get () {
+          return this.$store.state.getEdit
+        },
+        set () {
+          this.$store.commit('setEdit')
+        }
+      }
     },
   }
 

@@ -1,8 +1,8 @@
 <template>
 
-  <HomeView @toastHelper="toggleToast"></HomeView>
-  <!-- <button @click="setDeletedFB" class="btn btn-lg btn-warning">QUERY</button>
-  <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button> -->
+  <HomeView :editValue="edit" @toastHelper="toggleToast"></HomeView>
+
+  <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button>
 
 </template>
 
@@ -29,6 +29,7 @@ export default {
       userID: '',
       viewer: false,
       password: false,
+      edit: false,
     }
   },
 
@@ -81,8 +82,12 @@ export default {
     async setPassword(passw,isviewer){
       if(isviewer){
         let auth = await FireDataService.unlockGoal(passw);
-        console.log(auth);
-        this.toggleToast('password-unlocked');
+        if(auth){
+          this.toggleToast('password-unlocked');
+          this.$store.commit('setEdit',auth);
+          this.edit = auth;
+          console.log(this.$store.getters.getEdit);
+        }
       }else{
         this.password = await passw;
         this.toggleToast('password-set');
@@ -132,7 +137,7 @@ export default {
         break;
         case 'password-set':
           if (!this.$store.getters.getToast['password-set']){
-            this.toast.success("You have successfully set a password! Use it to edit your goals later.", {
+            this.toast.success("Use it to edit your goals later.", {
               position: "top-right",
               timeout: 10000,
               closeOnClick: true,
@@ -147,12 +152,9 @@ export default {
             });
             this.$store.commit('setToast','password-set');
           }
-        break;
-        case 'password-unlock':
-          if (!this.$store.getters.getToast['password-unlock']){
-            this.toast.success("You have successfully unlocked your goal for editing!", {
+          this.toast.success("Password set!", {
               position: "top-right",
-              timeout: 10000,
+              timeout: 6000,
               closeOnClick: true,
               pauseOnFocusLoss: true,
               pauseOnHover: true,
@@ -163,8 +165,21 @@ export default {
               icon: true,
               rtl: false
             });
-            this.$store.commit('setToast','password-unlock');
-          }
+        break;
+        case 'password-unlocked':
+          this.toast.success("You have successfully unlocked your goal for editing!", {
+            position: "top-right",
+            timeout: 10000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
+          });
         break;
         case 'goal-set':
           this.toast.success("You have successfully saved your goal. Share it using the page link!", {
