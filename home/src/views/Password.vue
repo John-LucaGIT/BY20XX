@@ -36,6 +36,7 @@ export default {
         window.addEventListener('scroll', this.handleScroll);
         document.addEventListener('mousemove', this.handleMouseMove);
         document.addEventListener('mouseup', this.handleMouseUp);
+        window.addEventListener('keydown', this.onKeyDown);
         if(this.isMobile()){
             this.message = 'Swipe up to set password';
         }else{
@@ -52,6 +53,7 @@ export default {
     },
     beforeDestroy() {
         window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('keydown', this.onKeyDown);
         document.removeEventListener('mousemove', this.handleMouseMove);
         document.removeEventListener('mouseup', this.handleMouseUp);
     },
@@ -62,6 +64,10 @@ export default {
                     this.isActive = !this.isActive;
                 }
             }
+        },
+        onKeyDown(event) {
+            if (event.keyCode === 27)
+                this.isActive = false;
         },
         handleClick() {
             this.isActive = !this.isActive;

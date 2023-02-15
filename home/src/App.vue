@@ -79,9 +79,9 @@ export default {
       if(payload && payload.length > 0){
         await FireDataService.saveGoals(payload,additional);
         this.toggleToast('goal-set');
+        this.viewer = true;
+        this.$store.commit('setViewState',true);
       }
-      this.viewer = true;
-      this.$store.commit('setViewState',true);
     },
     async setPassword(passw,isviewer){
       if(isviewer){

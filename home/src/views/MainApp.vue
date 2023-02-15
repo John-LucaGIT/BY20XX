@@ -28,8 +28,6 @@
   import { stringLiteral } from '@babel/types';
   import Goal from './Goal.vue';
   import { useToast } from "vue-toastification";
-  import { nextTick } from 'vue'
-
 
   export default {
     name: 'MainApp',
