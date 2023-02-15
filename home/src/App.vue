@@ -1,8 +1,8 @@
 <template>
 
-  <HomeView :editValue="edit" @toastHelper="toggleToast"></HomeView>
+  <HomeView :viewerValue="viewer" :editValue="edit" @toastHelper="toggleToast"></HomeView>
 
-  <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button>
+  <!-- <button @click="clearSession" class="btn btn-lg btn-danger">CLEAR</button> -->
 
 </template>
 
@@ -72,12 +72,16 @@ export default {
     async saveGoalsFB(){
       let payload = this.$store.getters.getGoal;
       let additional = {year:false,password:false};
+      additional.userid = this.userID;
       additional.year = this.$store.getters.getYear;
       additional.password = this.password;
+      console.log(additional);
       if(payload && payload.length > 0){
         await FireDataService.saveGoals(payload,additional);
         this.toggleToast('goal-set');
       }
+      this.viewer = true;
+      this.$store.commit('setViewState',true);
     },
     async setPassword(passw,isviewer){
       if(isviewer){
@@ -117,23 +121,19 @@ export default {
           }
         break;
         case 'no-goal':
-          if (!this.$store.getters.getToast['no-goal']){
-            this.toast.warning("The goal you are trying to view either does not exist or has been deleted.", {
-              position: "top-right",
-              timeout: 8000,
-              closeOnClick: true,
-              pauseOnFocusLoss: true,
-              pauseOnHover: true,
-              draggable: true,
-              draggablePercent: 0.6,
-              showCloseButtonOnHover: false,
-              closeButton: "button",
-              icon: true,
-              rtl: false
-            });
-            this.$store.commit('setToast','no-goal');
-
-          }
+          this.toast.warning("The goal you are trying to view either does not exist or has been deleted.", {
+            position: "top-right",
+            timeout: 8000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
+          });
         break;
         case 'password-set':
           if (!this.$store.getters.getToast['password-set']){

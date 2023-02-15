@@ -99,7 +99,6 @@ class FireDataService {
         console.log(goals);
         for(let g in goals){
             store.commit('addGoal', {
-                userid: goals[g].userid,
                 id: goals[g].id,
                 text: goals[g].text,
                 status: goals[g].status,
@@ -111,8 +110,25 @@ class FireDataService {
 
 
     async saveGoals(goals,additional=false){
+
+        let userRef = null;
         const batch = writeBatch(db);
-        const userRef = doc(collection(db, "users"));
+        console.log(additional.userid,'hello');
+
+        if(additional.userid && additional.userid != ""){
+            userRef = doc(collection(db, "users"),additional.userid);
+            const oldGoalRef = collection(userRef, "goals");
+            const batch = writeBatch(db);
+
+            const goalsDocs = await getDocs(oldGoalRef);
+            goalsDocs.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+            console.log(`Deleted goals subcollection for user with ID ${additional.userid}`);
+        }else{
+            userRef = doc(collection(db, "users"));
+        }
 
         if(goals.length > 0){
             goals.forEach(goal => {
@@ -126,7 +142,6 @@ class FireDataService {
                 });
               });
               await batch.commit();
-              "$2a$10$ruBn6VWKgzfvX/3UaVqhuuuGyKBNap9877K8aQrXYeb70zxpGcP1m"
 
             if(additional)
               console.log(additional);
@@ -136,6 +151,8 @@ class FireDataService {
                 }
                 if(!additional.password){
                     additional.password = false;
+                }else{
+                    store.commit.setPasswd = true;
                 }
                 try {
                     const userDocRef = doc(db, "users", userRef.id); // Construct a DocumentReference to the user's document

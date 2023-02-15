@@ -7,7 +7,7 @@
     <a href="/">
       <img class="lnd-logo" alt="By20XX logo" src="../assets/by20xx.png">
     </a>
-    <MainApp :editValue="editValue" @saveGoalsHelper="fireMethodSave" @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
+    <MainApp :viewerValue="viewerValue" :editValue="editValue" @saveGoalsHelper="fireMethodSave" @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
     <GoalOverview v-if="page == 'overview'"></GoalOverview>
     <Password v-if="this.$store.getters.getPassword || this.$store.getters.getViewState == false" @passwordHelper="setParentPasswd"></Password>
 
@@ -24,7 +24,8 @@ import Password from './Password.vue';
 export default {
   name: 'HomeView',
   props: {
-    editValue: Boolean
+    editValue: Boolean,
+    viewerValue: Boolean,
   },
   components: {
     MainApp,
