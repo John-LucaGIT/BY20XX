@@ -11,8 +11,6 @@
 import HomeView from './views/HomeView.vue';
 import FireDataService from "./assets/services/database";
 import { useToast } from "vue-toastification";
-import bcrypt from 'bcryptjs';
-
 
 
 export default {
@@ -30,6 +28,7 @@ export default {
     return{
       userID: '',
       viewer: false,
+      password: false,
     }
   },
 
@@ -44,8 +43,6 @@ export default {
         this.$store.commit('setViewState',true);
       }
       this.viewer = this.$store.getters.getViewState;
-      console.log(this.encryptPassword("bananas"));
-
 
       return this.userID;
     },
@@ -53,10 +50,6 @@ export default {
   methods:{
     addGoalFB(payload){
       FireDataService.addGoal(payload.userid, payload.id, payload.goal, payload.status, payload.deleted);
-    },
-    encryptPassword(password){
-      const salt = bcrypt.genSaltSync(10)
-      return bcrypt.hashSync(password, salt)
     },
     getGoalsFB(){
       FireDataService.getGoals();
@@ -75,11 +68,20 @@ export default {
     setDeletedFB(payload){
       FireDataService.setDeleted(payload);
     },
-    saveGoalsFB(){
+    async saveGoalsFB(){
       let payload = this.$store.getters.getGoal;
       let additional = {year:false,password:false};
       additional.year = this.$store.getters.getYear;
-      FireDataService.saveGoals(payload,additional);
+      additional.password = this.password;
+      if(payload && payload.length > 0){
+        await FireDataService.saveGoals(payload,additional);
+        this.toggleToast('goal-set');
+      }
+    },
+    setPassword(passw){
+      this.password = passw;
+      this.toggleToast('password-set');
+
     },
     clearSession(){
       sessionStorage.clear();
@@ -122,6 +124,39 @@ export default {
             this.$store.commit('setToast','no-goal');
 
           }
+        break;
+        case 'password-set':
+          if (!this.$store.getters.getToast['password-set']){
+            this.toast.success("You have successfully set a password! Use it to edit your goals later.", {
+              position: "top-right",
+              timeout: 10000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: false,
+              closeButton: "button",
+              icon: true,
+              rtl: false
+            });
+            this.$store.commit('setToast','password-set');
+          }
+        break;
+        case 'goal-set':
+          this.toast.success("You have successfully saved your goal. Share it using the page link!", {
+            position: "top-right",
+            timeout: 8000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
+          });
         break;
       }
     }

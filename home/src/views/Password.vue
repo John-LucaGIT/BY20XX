@@ -7,13 +7,19 @@
         <div class="message" v-if="!isPasswordSet">
             <div class="slider" v-if="isActive" ref="slider"></div>
         </div>
-        <input type="password" v-model="password" v-if="isActive" placeholder="Enter password">
+        <form @submit.prevent="submitForm">
+            <input type="password" v-model="password" v-if="isActive" placeholder="Enter password">
+        </form>
+
     </div>
 </template>
 
 <script>
+import bcrypt from 'bcryptjs';
+
 export default {
     name: 'Password',
+    emits: ['passwordHelper'],
     data() {
         return {
             isActive: false,
@@ -28,6 +34,11 @@ export default {
         window.addEventListener('scroll', this.handleScroll);
         document.addEventListener('mousemove', this.handleMouseMove);
         document.addEventListener('mouseup', this.handleMouseUp);
+        if(this.isMobile()){
+            this.message = 'Swipe up to set password';
+        }else{
+            this.message = 'Click to set password';
+        }
     },
     beforeDestroy() {
         window.removeEventListener('scroll', this.handleScroll);
@@ -45,32 +56,22 @@ export default {
                 this.isActive = true;
             }
         },
-        handleMouseDown(event) {
-            if (!this.isPasswordSet) {
-                this.isDragging = true;
-                this.startX = event.clientX;
-            }
+        isMobile(){
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         },
-        handleMouseMove(event) {
-            if (this.isDragging) {
-                const slider = this.$refs.slider;
-                const x = event.clientX - this.startX;
-                slider.style.transform = `translateX(${x}px)`;
-                if (x >= 200) {
-                    this.isDragging = false;
-                    this.isActive = false;
-                    this.isPasswordSet = true;
-                    this.$emit('password-set', this.password);
-                }
-            }
+        encryptPassword(password){
+            const salt = bcrypt.genSaltSync(10)
+            return bcrypt.hashSync(password, salt)
         },
-        handleMouseUp() {
-            if (this.isDragging) {
-                this.isDragging = false;
-                const slider = this.$refs.slider;
-                slider.style.transform = '';
-            }
+        async submitForm() {
+            this.password = await this.encryptPassword(this.password);
+            console.log(this.password);
+            this.isActive = false;
+            this.isPasswordSet = true;
+            this.$emit('passwordHelper',this.password);
         },
+
+
     },
 };
 </script>
