@@ -5,6 +5,9 @@ node_modules
 /dist*
 /dist/*
 /dist
+/home/dist*
+/home/dist/*
+
 
 # local env files
 .env.local
