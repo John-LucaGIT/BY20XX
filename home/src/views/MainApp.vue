@@ -6,7 +6,7 @@
 
       <div id="goal-list">
         <Goal @deleteFB="fireMethodDeleteHelper" :goalList="goalList"></Goal>
-        <span style="color:red" v-if="error.goal">{{error.goal}}</span>
+        <span class="error-message" v-if="error.goal">{{error.goal}}</span>
       </div>
 
       <div v-if="this.viewer == false" class="goal-wrapper">
@@ -115,6 +115,7 @@
         const id = new URL(location.href).searchParams.get('goal');
         if (id != null && id != '') {
           this.$store.commit('setViewState', true);
+          this.$store.commit('setUserID',id);
         }
         return this.viewer = this.$store.getters.getViewState;
       },
@@ -228,7 +229,7 @@ div.goal-wrapper{
     margin-right: auto;
     text-align: center;
     margin-top: 1rem;
-    margin-bottom: 5rem;
+    margin-bottom: 0.2rem;
 }
 
 input{

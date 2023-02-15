@@ -9,6 +9,8 @@
     </a>
     <MainApp @saveGoalsHelper="fireMethodSave" @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
     <GoalOverview v-if="page == 'overview'"></GoalOverview>
+    <Password v-if="this.$store.getters.getPassword || this.$store.getters.getViewState == false" @passwordHelper="setParentPasswd"></Password>
+
   </div>
 </template>
 
@@ -16,32 +18,37 @@
 // @ is an alias to /src
 import MainApp from './MainApp.vue';
 import GoalOverview from './GoalOverview.vue';
+import Password from './Password.vue';
+
 
 export default {
   name: 'HomeView',
   components: {
     MainApp,
     GoalOverview,
+    Password
   },
   data(){
     return{
       page: 'home',
-      publicPath: process.env.BASE_URL
+      publicPath: process.env.BASE_URL,
     }
   },
-
   methods:{
-    fireMethod(payload){
+    async fireMethod(payload){
       this.$parent.addGoalFB(payload);
     },
     async fireMethodGet(){
       await this.$parent.syncGoalsFB();
     },
-    fireMethodDelete(payload){
+    async fireMethodDelete(payload){
       this.$parent.setDeletedFB(payload);
     },
-    fireMethodSave(){
+    async fireMethodSave(){
       this.$parent.saveGoalsFB();
+    },
+    async setParentPasswd(value,isviewer){
+      this.$parent.setPassword(value,isviewer);
     },
     changePage(setting){
       switch(setting){
