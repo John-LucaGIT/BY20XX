@@ -57,8 +57,10 @@ export default {
     },
     methods: {
         handleScroll() {
-            if (window.scrollY > 100 && !this.isPasswordSet) {
-                this.isActive = true;
+            if(this.isMobile()){
+                if (window.scrollY > 50 && !this.isPasswordSet) {
+                    this.isActive = !this.isActive;
+                }
             }
         },
         handleClick() {

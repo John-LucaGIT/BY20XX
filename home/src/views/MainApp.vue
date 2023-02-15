@@ -9,13 +9,13 @@
         <span class="error-message" v-if="error.goal">{{error.goal}}</span>
       </div>
 
-      <div v-if="this.viewer == false" class="goal-wrapper">
+      <div v-if="this.viewerValue == false || this.editValue" class="goal-wrapper">
             <div class="input-group bg-dark input-group-lg">
                 <div class="bg-dark input-group-prepend" id="input-descrp-lnd">
                     <span class="text-light bg-dark input-group-text" id="inputGroup-sizing-lg">Enter Goal</span>
                 </div>
                 <input @click="toggleToast('init-info')" type="text" @keyup="forceGoalLength" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
-                <button v-if="viewer == false" @click="this.$emit('saveGoalsHelper')" class="btn btn"><i class="fa-solid fa-floppy-disk"></i></button>
+                <button v-if="this.viewerValue == false || this.editValue" @click="this.$emit('saveGoalsHelper')" class="btn btn"><i class="fa-solid fa-floppy-disk"></i></button>
             </div>
       </div>
 
@@ -28,9 +28,15 @@
   import { stringLiteral } from '@babel/types';
   import Goal from './Goal.vue';
   import { useToast } from "vue-toastification";
+  import { nextTick } from 'vue'
+
 
   export default {
     name: 'MainApp',
+    props: {
+      editValue: Boolean,
+      viewerValue: Boolean,
+    },
     components: {
       Goal,
     },
@@ -64,6 +70,7 @@
       if (this.$store) {
         await this.updateGoalList;
         await this.updateYear;
+        await this.updateEdit;
       }
       setTimeout(() => {
         this.setViewer();
@@ -74,20 +81,28 @@
       goalInput(action) {
         if (document.getElementById('goalInput')) {
           this.goal = document.getElementById('goalInput').value;
-          if (this.validateGoal(this.goal))
+          const goals = this.$store.getters.getGoal;
+          if (goals.length > 0) {
+            this.gid = goals[goals.length - 1].id + 1;
+          } else {
+            this.gid = 0;
+          }
+          if (this.validateGoal(this.goal)) {
             this.$store.commit('addGoal', {
-              id: this.gid++,
+              id: this.gid,
               text: this.goal,
               status: this.status,
               deleted: false,
             });
             this.goalList = this.$store.getters.getGoal;
+          }
         }
         this.toggleToast('goal');
       },
+
       validateGoal(value){
-        if (value.length > 50){
-          this.error['goal'] = "Goal's may not exceed 50 characters!";
+        if (value.length > 50 || value.length < 3){
+          this.error['goal'] = "Goal's must be between 3 and 50 characters!";
           return false;
         }
         var re = RegExp(/^[\w\s-]{0,50}$/);
@@ -206,10 +221,20 @@
         }
         return this.year = fetchedYear;
       },
+      updateEdit(){
+        this.$store.commit('setEdit',this.editValue)
+      },
       hasSynced(){
         return this.$store.state.hasSynced
       },
-
+      getEdit: {
+        get () {
+          return this.$store.state.getEdit
+        },
+        set () {
+          this.$store.commit('setEdit')
+        }
+      }
     },
   }
 
