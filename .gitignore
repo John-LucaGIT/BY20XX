@@ -2,6 +2,7 @@
 node_modules
 
 # Build files
+dist*
 /dist*
 /dist/*
 /dist
