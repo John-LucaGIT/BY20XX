@@ -20,3 +20,5 @@ Let me know if you have feedback or any advice on how to best go forward with th
 - View deleted goals
 - Recover deleted goals
 - Share goals with a unique URL
+- Added analytics
+- Deployed app [BY20XX](https://by20xx.com)
