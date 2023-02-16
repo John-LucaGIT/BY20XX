@@ -1,4 +1,4 @@
-# BY20XX
+# [BY20XX](https://by20xx.com)
 - A simple web app created using Vue.js for users to add goals they want to achieve by a certain year.
 The idea came to me because... I thought hey, that might be neat. So here it is.
 
