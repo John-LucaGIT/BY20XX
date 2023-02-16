@@ -8,7 +8,8 @@ dist*
 /dist
 /home/dist*
 /home/dist/*
-
+/home/server*
+/home/server/*
 
 # local env files
 .env.local
