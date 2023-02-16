@@ -1,4 +1,5 @@
 import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, writeBatch, collection, getDocs, query, where } from 'firebase/firestore';
+import { getAnalytics, logEvent } from "firebase/analytics";
 import { initializeApp } from 'firebase/app';
 import {store} from '../../store/store';
 import router from '../../router/index';
@@ -22,6 +23,7 @@ var firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+const analytics = getAnalytics(app);
 
 function bcompare(password, hashedPassword){
     return new Promise((resolve, reject) => {
@@ -34,6 +36,7 @@ function bcompare(password, hashedPassword){
             if (isMatch) {
                 console.log('Password match');
                 resolve(true);
+                logEvent(analytics, 'logins', { loginSuccess: true});
             }
 
             if (!isMatch) {
@@ -41,6 +44,7 @@ function bcompare(password, hashedPassword){
                 // message will be sent
                 console.log('Password missmatch');
                 resolve(false);
+                logEvent(analytics, 'incorrect_logins', { loginFailed: true});
             }
 
             if (err) {
@@ -105,6 +109,7 @@ class FireDataService {
                 deleted: goals[g].deleted
             });
         }
+        logEvent(analytics, 'synced_goals', { synced: true});
     }
 
 
@@ -153,6 +158,7 @@ class FireDataService {
                     additional.password = false;
                 }else{
                     store.commit.setPasswd = true;
+                    logEvent(analytics, 'goals_with_password', { hasPassword: true});
                 }
                 try {
                     const userDocRef = doc(db, "users", userRef.id); // Construct a DocumentReference to the user's document
@@ -167,6 +173,7 @@ class FireDataService {
 
             router.push({ path: '/', query: { goal: userRef.id } });
             console.log(additional)
+            logEvent(analytics, 'goals_saved', { goals: goals.length});
 
             return userRef.id;
         }
