@@ -7,9 +7,9 @@
     <a href="/">
       <img class="lnd-logo" alt="By20XX logo" src="../assets/by20xx.png">
     </a>
-    <MainApp :viewerValue="viewerValue" :editValue="editValue" @saveGoalsHelper="fireMethodSave" @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
+    <MainApp @pw-off="togglePWField" :viewerValue="viewerValue" :editValue="editValue" @saveGoalsHelper="fireMethodSave" @deleteFB="fireMethodDelete" @syncFB-goals="fireMethodGet" @goal-emit="fireMethod" v-if="page == 'home'"></MainApp>
     <GoalOverview v-if="page == 'overview'"></GoalOverview>
-    <Password v-if="this.$store.getters.getPassword || this.$store.getters.getViewState == false" @passwordHelper="setParentPasswd"></Password>
+    <Password ref="pw" v-if="this.$store.getters.getPassword || this.$store.getters.getViewState == false" @passwordHelper="setParentPasswd"></Password>
 
   </div>
 </template>
@@ -53,6 +53,10 @@ export default {
     },
     async setParentPasswd(value,isviewer){
       this.$parent.setPassword(value,isviewer);
+    },
+    togglePWField(){
+      this.$refs.pw.changeActiveState();
+
     },
     changePage(setting){
       switch(setting){

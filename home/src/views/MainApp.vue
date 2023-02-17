@@ -153,6 +153,7 @@
             }
             break;
           case 'init-info':
+            this.$emit('pw-off')
             if (!this.$store.getters.getToast['init-info']){
               this.toast.info("Click on a goal to delete it.", {
                 position: "top-right",
@@ -254,6 +255,7 @@ div.goal-wrapper{
     margin-top: 1rem;
     margin-bottom: 0.2rem;
 }
+
 
 input{
     text-align: center;
