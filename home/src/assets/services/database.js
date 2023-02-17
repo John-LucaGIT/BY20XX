@@ -34,7 +34,6 @@ function bcompare(password, hashedPassword){
             // Comparing the original password to
             // encrypted password
             if (isMatch) {
-                console.log('Password match');
                 resolve(true);
                 logEvent(analytics, 'logins', { loginSuccess: true});
             }
@@ -42,7 +41,6 @@ function bcompare(password, hashedPassword){
             if (!isMatch) {
                 // If password doesn't match the following
                 // message will be sent
-                console.log('Password missmatch');
                 resolve(false);
                 logEvent(analytics, 'incorrect_logins', { loginFailed: true});
             }
@@ -86,7 +84,6 @@ class FireDataService {
             const userDocRef = doc(db, "users", userRef.id); // Construct a DocumentReference to the user's document
             const userDocSnapshot = await getDoc(userDocRef); // Retrieve the user's document
             const additionalData = userDocSnapshot.data(); // Get the additional data from the document
-            console.log(additionalData);
             if (additionalData){
                 if (additionalData.year && additionalData.year != ""){
                     store.commit('setYear', additionalData.year);
@@ -100,7 +97,6 @@ class FireDataService {
             console.error("Error retrieving user document: ", e);
         }
 
-        console.log(goals);
         for(let g in goals){
             store.commit('addGoal', {
                 id: goals[g].id,
@@ -118,7 +114,6 @@ class FireDataService {
 
         let userRef = null;
         const batch = writeBatch(db);
-        console.log(additional.userid,'hello');
 
         if(additional.userid && additional.userid != ""){
             userRef = doc(collection(db, "users"),additional.userid);
@@ -130,7 +125,6 @@ class FireDataService {
                 batch.delete(doc.ref);
             });
             await batch.commit();
-            console.log(`Deleted goals subcollection for user with ID ${additional.userid}`);
         }else{
             userRef = doc(collection(db, "users"));
         }
@@ -149,7 +143,6 @@ class FireDataService {
               await batch.commit();
 
             if(additional)
-              console.log(additional);
               if(additional.year && additional.year != "XX" && additional.year != "" || additional.password && additional.password != ""){
                 if(!additional.year){
                     additional.year = false;
@@ -172,7 +165,6 @@ class FireDataService {
               }
 
             router.push({ path: '/', query: { goal: userRef.id } });
-            console.log(additional)
             logEvent(analytics, 'goals_saved', { goals: goals.length});
 
             return userRef.id;
@@ -213,7 +205,6 @@ class FireDataService {
 
         for(let e in goals){
             if (goals[e].id == gid){
-                console.log(goals[e]);
                 deletedFB = goals[e].deleted;
                 docID = goals[e].docid;
             }

@@ -59,7 +59,6 @@
     },
     computed:{
         updateDeletedGoalList(){
-            console.log('computed')
             return this.deletedGoals = this.$store.getters.getDeletedGoal;
         },
         listToShow(){

@@ -60,7 +60,6 @@
     async mounted() {
 
       if (!this.hasSynced) {
-        console.log('syncing')
         await this.$emit('syncFB-goals');
         this.$store.commit('setHasSynced', true);
       }
@@ -209,7 +208,6 @@
 
     computed:{
       updateGoalList(){
-        console.log('computed')
         this.year = this.$store.getters.getYear;
         return this.goalList = this.$store.getters.getGoal;
       },
