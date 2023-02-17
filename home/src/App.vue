@@ -32,7 +32,9 @@ export default {
       edit: false,
     }
   },
-
+  mounted(){
+    document.title = 'BY20XX';
+  },
   computed: {
     computedUserID() {
       const id = new URL(location.href).searchParams.get('goal');
