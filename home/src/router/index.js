@@ -8,6 +8,15 @@ const routes = [
     component: HomeView,
     query: {
       user: null
+    },
+    meta: {
+      title: 'BY20XX',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Create and share goals for free, no sign-up needed.'
+        },
+      ]
     }
   }
 ]
