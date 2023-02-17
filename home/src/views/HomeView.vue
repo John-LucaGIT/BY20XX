@@ -36,9 +36,43 @@ export default {
     return{
       page: 'home',
       publicPath: process.env.BASE_URL,
+      touchStartX: 0,
+      touchEndX: 0,
+      touchMoveThreshold: 40,
     }
   },
+  mounted(){
+    window.addEventListener('touchstart', this.handleTouchStart);
+    window.addEventListener('touchmove', this.handleTouchMove);
+    window.addEventListener('touchend', this.handleTouchEnd);
+  },
+  beforeDestroy() {
+    window.removeEventListener('touchstart', this.handleTouchStart);
+    window.removeEventListener('touchmove', this.handleTouchMove);
+    window.removeEventListener('touchend', this.handleTouchEnd);
+  },
   methods:{
+    isMobile(){
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    },
+    handleTouchStart(event) {
+        this.touchStartX = event.touches[0].clientX;
+    },
+    handleTouchMove(event) {
+      if (!this.isMobile()) {
+          return;
+      }
+
+      this.touchEndX = event.touches[0].clientX;
+
+      if (this.touchStartX - this.touchEndX > this.touchMoveThreshold) {
+        this.changePage('home');
+      }
+      if (this.touchEndX - this.touchStartX > this.touchMoveThreshold) {
+        this.changePage('overview');
+
+      }
+    },
     async fireMethod(payload){
       this.$parent.addGoalFB(payload);
     },

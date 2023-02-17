@@ -36,8 +36,6 @@ export default {
   computed: {
     computedUserID() {
       const id = new URL(location.href).searchParams.get('goal');
-      console.log(id);
-
       this.userID = id;
       this.$store.commit('setUserID',this.userID);
       if(id != null && id != ''){
@@ -75,13 +73,17 @@ export default {
       additional.userid = this.userID;
       additional.year = this.$store.getters.getYear;
       additional.password = this.password;
-      console.log(additional);
       if(payload && payload.length > 0){
-        await FireDataService.saveGoals(payload,additional);
+        let userid = await FireDataService.saveGoals(payload,additional);
         this.toggleToast('goal-set');
         this.viewer = true;
         this.$store.commit('setViewState',true);
+        setTimeout(() => {
+          navigator.clipboard.writeText(`https://BY20XX.com/?goal=${userid}`);
+          this.toggleToast('clipboard');
+        }, 500)
       }
+
     },
     async setPassword(passw,isviewer){
       if(isviewer){
@@ -90,7 +92,6 @@ export default {
           this.toggleToast('password-unlocked');
           this.$store.commit('setEdit',auth);
           this.edit = auth;
-          console.log(this.$store.getters.getEdit);
         }
       }else{
         this.password = await passw;
@@ -185,6 +186,21 @@ export default {
           this.toast.success("You have successfully saved your goal. Share it using the page link!", {
             position: "top-right",
             timeout: 8000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
+          });
+        break;
+        case 'clipboard':
+          this.toast.success("Shareable URL copied to clipboard!", {
+            position: "top-right",
+            timeout: 5000,
             closeOnClick: true,
             pauseOnFocusLoss: true,
             pauseOnHover: true,
