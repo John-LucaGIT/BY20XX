@@ -19,3 +19,5 @@ Let me know if you have feedback or any advice on how to best go forward with th
 - Share goals with a unique URL
 - Added analytics
 - Deployed app [BY20XX](https://by20xx.com)
+- Added mobile app support with swipe features
+- Shared URL automatically copied to clipboard (not on Safari)
