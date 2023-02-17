@@ -40,10 +40,6 @@ export default {
       this.$store.commit('setUserID',this.userID);
       if(id != null && id != ''){
         this.$store.commit('setViewState',true);
-        setTimeout(() => {
-          navigator.clipboard.writeText(`https://BY20XX.com/?goal=${this.userID}`);
-          this.toggleToast('clipboard');
-        }, 500)
       }
       this.viewer = this.$store.getters.getViewState;
 
@@ -78,11 +74,16 @@ export default {
       additional.year = this.$store.getters.getYear;
       additional.password = this.password;
       if(payload && payload.length > 0){
-        await FireDataService.saveGoals(payload,additional);
+        let userid = await FireDataService.saveGoals(payload,additional);
         this.toggleToast('goal-set');
         this.viewer = true;
         this.$store.commit('setViewState',true);
+        setTimeout(() => {
+          navigator.clipboard.writeText(`https://BY20XX.com/?goal=${userid}`);
+          this.toggleToast('clipboard');
+        }, 500)
       }
+
     },
     async setPassword(passw,isviewer){
       if(isviewer){
