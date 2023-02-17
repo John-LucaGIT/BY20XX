@@ -36,7 +36,7 @@ export default {
             error: '',
             touchStartY: 0,
             touchEndY: 0,
-            touchMoveThreshold: 1,
+            touchMoveThreshold: 40,
         };
     },
     mounted() {
