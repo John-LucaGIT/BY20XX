@@ -3,15 +3,16 @@
         <span>{{ message }}</span>
         <span class="pulsate"></span>
     </div>
-    <div class="password-input" :class="{ 'active': isActive }">
-        <div class="message" v-if="!isPasswordSet">
-            <div class="slider" v-if="isActive" ref="slider"></div>
+    <div class="input-group bg-dark input-group-lg">
+        <div class="password-input" :class="{ 'active': isActive, inputBoxUp : flag }">
+            <div class="message" v-if="!isPasswordSet">
+                <div class="slider" v-if="isActive" ref="slider"></div>
+            </div>
+            <form @submit.prevent="submitForm">
+                <p class="error-message">{{ error }}</p>
+                <input class="input-bx msgara" @blur="flag=false,isActive=false"  @focus="flag=true" @click="setClicked" type="password" v-model="password" v-if="isActive" placeholder="Enter password">
+            </form>
         </div>
-        <form @submit.prevent="submitForm">
-            <p class="error-message">{{ error }}</p>
-            <input type="password" v-model="password" v-if="isActive" placeholder="Enter password">
-        </form>
-
     </div>
 </template>
 
@@ -21,6 +22,9 @@ import bcrypt from 'bcryptjs';
 export default {
     name: 'Password',
     emits: ['passwordHelper'],
+    props:{
+        togglePWInput: Boolean
+    },
     data() {
         return {
             isActive: false,
@@ -30,15 +34,21 @@ export default {
             isPasswordSet: false,
             message: 'Swipe up to set password',
             error: '',
+            flag: false,
+            touchStartY: 0,
+            touchEndY: 0,
+            touchMoveThreshold: 1,
         };
     },
     mounted() {
         window.addEventListener('scroll', this.handleScroll);
-        document.addEventListener('mousemove', this.handleMouseMove);
-        document.addEventListener('mouseup', this.handleMouseUp);
+        window.addEventListener('touchstart', this.handleTouchStart);
+        window.addEventListener('touchmove', this.handleTouchMove);
+        window.addEventListener('touchend', this.handleTouchEnd);
         window.addEventListener('keydown', this.onKeyDown);
+
         if(this.isMobile()){
-            this.message = 'Swipe up to set password';
+            this.message = 'Swipe up or tap to set password';
         }else{
             this.message = 'Click to set password';
         }
@@ -49,20 +59,34 @@ export default {
                 this.message = 'Click to enter password';
             }
         }
-
     },
     beforeDestroy() {
         window.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('keydown', this.onKeyDown);
-        document.removeEventListener('mousemove', this.handleMouseMove);
-        document.removeEventListener('mouseup', this.handleMouseUp);
+        window.removeEventListener('touchstart', this.handleTouchStart);
+        window.removeEventListener('touchmove', this.handleTouchMove);
+        window.removeEventListener('touchend', this.handleTouchEnd);
     },
     methods: {
-        handleScroll() {
-            if(this.isMobile()){
-                if (window.scrollY > 50 && !this.isPasswordSet) {
-                    this.isActive = !this.isActive;
-                }
+        changeActiveState(){
+            this.isActive = !this.isActive;
+        },
+        handleTouchStart(event) {
+            this.touchStartY = event.touches[0].clientY;
+        },
+        handleTouchMove(event) {
+            if (!this.isMobile()) {
+                return;
+            }
+
+            this.touchEndY = event.touches[0].clientY;
+
+            if (this.touchStartY - this.touchEndY > this.touchMoveThreshold && !this.isPasswordSet) {
+                this.isActive = true;
+
+            }
+            if (this.touchEndY - this.touchStartY > this.touchMoveThreshold && !this.isPasswordSet) {
+                this.isActive = false;
             }
         },
         onKeyDown(event) {
@@ -116,6 +140,33 @@ export default {
 
 .password-input.active {
     transform: translateY(0);
+}
+
+
+.inputBoxUp { position: fixed; top: 0; }
+
+.enter_msg{
+  display: flex;
+  flex: 3;
+  position: fixed;
+  width: 72%;
+  padding: 2% 4%;
+}
+
+
+.input-bx {
+  border: 1px solid #111;
+  color: white;
+}
+
+
+.msgara{
+    background-color: #260b1c;
+    border: 1px solid #b92876;
+    border-radius: 2px;
+    width: 80%;
+    padding: 2%;
+    height: 38px;
 }
 
 .message {
