@@ -4,13 +4,13 @@
         <span class="pulsate"></span>
     </div>
     <div class="input-group bg-dark input-group-lg">
-        <div class="password-input" :class="{ 'active': isActive, inputBoxUp : flag }">
+        <div class="password-input"   :class="{ 'active': isActive}">
             <div class="message" v-if="!isPasswordSet">
                 <div class="slider" v-if="isActive" ref="slider"></div>
             </div>
             <form @submit.prevent="submitForm">
                 <p class="error-message">{{ error }}</p>
-                <input class="input-bx msgara" @blur="flag=false,isActive=false"  @focus="flag=true" @click="setClicked" type="password" v-model="password" v-if="isActive" placeholder="Enter password">
+                <input class="input-bx msgara" @blur="flag=false,isActive=false" @click="setClicked" type="password" v-model="password" v-if="isActive" placeholder="Enter password">
             </form>
         </div>
     </div>
@@ -34,7 +34,6 @@ export default {
             isPasswordSet: false,
             message: 'Swipe up to set password',
             error: '',
-            flag: false,
             touchStartY: 0,
             touchEndY: 0,
             touchMoveThreshold: 1,
@@ -69,7 +68,7 @@ export default {
     },
     methods: {
         changeActiveState(){
-            this.isActive = !this.isActive;
+            this.isActive = false;
         },
         handleTouchStart(event) {
             this.touchStartY = event.touches[0].clientY;
@@ -140,17 +139,6 @@ export default {
 
 .password-input.active {
     transform: translateY(0);
-}
-
-
-.inputBoxUp { position: fixed; top: 0; }
-
-.enter_msg{
-  display: flex;
-  flex: 3;
-  position: fixed;
-  width: 72%;
-  padding: 2% 4%;
 }
 
 
