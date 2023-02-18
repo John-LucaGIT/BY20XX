@@ -81,12 +81,10 @@ export default {
             this.touchEndY = event.touches[0].clientY;
 
             if (this.touchStartY - this.touchEndY > this.touchMoveThreshold && !this.isPasswordSet) {
-                this.isActive = true;
+                this.isActive = !this.isActive;
 
             }
-            if (this.touchEndY - this.touchStartY > this.touchMoveThreshold && !this.isPasswordSet) {
-                this.isActive = false;
-            }
+
         },
         onKeyDown(event) {
             if (event.keyCode === 27)

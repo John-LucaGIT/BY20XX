@@ -66,11 +66,10 @@ export default {
       this.touchEndX = event.touches[0].clientX;
 
       if (this.touchStartX - this.touchEndX > this.touchMoveThreshold) {
-        this.changePage('home');
+        this.changePage('overview');
       }
       if (this.touchEndX - this.touchStartX > this.touchMoveThreshold) {
-        this.changePage('overview');
-
+        this.changePage('home');
       }
     },
     async fireMethod(payload){

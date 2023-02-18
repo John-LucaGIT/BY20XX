@@ -59,7 +59,6 @@
     },
     computed:{
         updateDeletedGoalList(){
-            console.log('computed')
             return this.deletedGoals = this.$store.getters.getDeletedGoal;
         },
         listToShow(){
@@ -115,20 +114,17 @@ i.fa-solid{
     padding-right: 0.3rem;
 }
 
+/* Hide scrollbar for IE, Edge and Firefox */
 .scrollable{
     overflow: auto;
-    height: 25rem;
+    height: 20rem;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scrollable::-webkit-scrollbar {
   display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.scrollable {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
 }
 
 h3.completed{
@@ -137,7 +133,7 @@ h3.completed{
 }
 @media (max-width: 480px) {
     .scrollable {
-        height: 20rem;
+        height: 16.5rem;
     }
 }
 
