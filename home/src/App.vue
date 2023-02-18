@@ -81,8 +81,12 @@ export default {
         this.viewer = true;
         this.$store.commit('setViewState',true);
         setTimeout(() => {
-          navigator.clipboard.writeText(`https://BY20XX.com/?goal=${userid}`);
-          this.toggleToast('clipboard');
+          try{
+            navigator.clipboard.writeText(`https://BY20XX.com/?goal=${userid}`);
+            this.toggleToast('clipboard');
+          }catch(err){
+            console.log("Error Clipboard Copy not Supported on IOS: "+err);
+          }
         }, 500)
       }
 
