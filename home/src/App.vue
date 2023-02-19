@@ -244,7 +244,7 @@ export default {
 
 }
 html ,#app{
-  background-color: #42b983;
+  background-color: rgb(30, 30, 30);
 
 }
 
