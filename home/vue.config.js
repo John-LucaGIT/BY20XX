@@ -9,13 +9,13 @@ module.exports = defineConfig({
     },
   },
   pwa: {
-    // appleMobileWebAppCapable: true,
+    title: 'BY20XX',
     name: 'BY20XX',
     version: 1.0,
     appleMobileWebAppCapable: 'yes',
     themeColor: "#42b983",
     msTileColor: "#42b983",
-    appleMobileWebAppStatusBarStyle: "#42b983", // set the appleMobileWebAppStatusBarStyle property
+    appleMobileWebAppStatusBarStyle: "black-translucent", // set the appleMobileWebAppStatusBarStyle property
     manifestOptions: {
       background_color: "#42b983",
       theme_color: "#42b983", // set the theme_color property
@@ -24,8 +24,7 @@ module.exports = defineConfig({
       appleTouchIcon: 'img/icons/apple-touch-icon.png',
       maskIcon: 'img/icons/safari-pinned-tab.svg',
       msTileImage: 'img/icons/mstile-150x150.png',
-      appleMobileWebAppCapable: 'yes',
-      appleMobileWebAppStatusBarStyle: "#42b983", // set the appleMobileWebAppStatusBarStyle property
+
     },
     iconPaths: {
       favicon32: 'img/icons/favicon-32x32.png',

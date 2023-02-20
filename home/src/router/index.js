@@ -5,6 +5,7 @@ const routes = [
   {
     path: '/',
     name: 'BY20XX',
+    title: 'BY20XX',
     component: HomeView,
     query: {
       user: null
@@ -13,8 +14,9 @@ const routes = [
       title: 'BY20XX',
       metaTags: [
         {
+          title: 'BY20XX',
           name: 'description',
-          content: 'Create and share goals for free, no sign-up needed.'
+          content: 'Create, share and edit goals for free, no sign-up needed.'
         },
       ]
     }
