@@ -15,6 +15,7 @@ import { useToast } from "vue-toastification";
 
 export default {
   name: 'App',
+
   components: {
     HomeView
   },
@@ -241,14 +242,14 @@ export default {
   text-align: center;
   font-weight: bolder;
   color: #4b8ff4;
-
 }
-html ,#app{
+html, #app{
   background-color: rgb(30, 30, 30);
-
 }
 
-
+body{
+  background-color: #42b983;
+}
 
 nav {
   padding: 30px;
