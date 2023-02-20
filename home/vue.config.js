@@ -40,7 +40,7 @@ module.exports = defineConfig({
           type: 'image/png'
         },
         {
-          src: 'img/icons/favicon.ico',
+          src: 'favicon.ico',
           type: 'image/ico'
         },
         {
