@@ -19,14 +19,50 @@ module.exports = defineConfig({
     manifestOptions: {
       background_color: "#42b983",
       theme_color: "#42b983", // set the theme_color property
-      favicon32: 'img/icons/favicon-32x32.png',
-      favicon16: 'img/icons/favicon-16x16.png',
-      appleTouchIcon: 'img/icons/apple-touch-icon.png',
-      maskIcon: 'img/icons/safari-pinned-tab.svg',
-      msTileImage: 'img/icons/mstile-150x150.png',
-
+      icons: [
+        {
+          src: 'img/icons/android-chrome-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: 'img/icons/android-chrome-384x384.png',
+          sizes: '384x384',
+          type: 'image/png'
+        },
+        {
+          src: 'img/icons/android-chrome-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        },
+        {
+          src: 'img/icons/apple-touch-icon.png',
+          type: 'image/png'
+        },
+        {
+          src: 'img/icons/favicon.ico',
+          type: 'image/ico'
+        },
+        {
+          src: 'img/icons/favicon-16x16.png',
+          type: 'image/png'
+        },
+        {
+          src: 'img/icons/favicon-32x32.png',
+          type: 'image/png'
+        },
+        {
+          src: 'img/icons/safari-pinned-tab.svg',
+          type: 'image/svg'
+        },
+        {
+          src: 'img/icons/mstile-150x150.png',
+          type: 'image/png'
+        }
+      ],
     },
     iconPaths: {
+      favicon: 'favicon.ico',
       favicon32: 'img/icons/favicon-32x32.png',
       favicon16: 'img/icons/favicon-16x16.png',
       appleTouchIcon: 'img/icons/apple-touch-icon.png',
