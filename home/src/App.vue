@@ -235,8 +235,8 @@ export default {
 
 #app {
   // font-family: Avenir, Helvetica, Arial, sans-serif;
-  font-family: 'Bungee Hairline', cursive;
-  font-family: 'Bungee', cursive;
+  font-family: 'Bungee Hairline', Arial, Helvetica, sans-serif;
+  font-family: 'Bungee', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
