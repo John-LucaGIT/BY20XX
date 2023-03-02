@@ -15,6 +15,7 @@ import { useToast } from "vue-toastification";
 
 export default {
   name: 'App',
+
   components: {
     HomeView
   },
@@ -234,21 +235,21 @@ export default {
 
 #app {
   // font-family: Avenir, Helvetica, Arial, sans-serif;
-  font-family: 'Bungee Hairline', cursive;
-  font-family: 'Bungee', cursive;
+  font-family: 'Bungee Hairline', Arial, Helvetica, sans-serif;
+  font-family: 'Bungee', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   font-weight: bolder;
   color: #4b8ff4;
-
 }
-html ,#app{
+html, #app{
   background-color: rgb(30, 30, 30);
-
 }
 
-
+body{
+  background-color: #42b983;
+}
 
 nav {
   padding: 30px;

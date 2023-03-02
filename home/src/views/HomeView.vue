@@ -114,6 +114,11 @@ export default {
     text-decoration: underline;
     cursor: pointer;
   }
+
+  .home{
+    padding-top: 1rem;
+  }
+
   a#home{
     color: #42b983
   }
@@ -125,7 +130,6 @@ export default {
   img{
     filter: drop-shadow(16px 8px 16px black);
   }
-
 
   /* Logo styles for mobile devices */
   @media (max-width: 767px) {
