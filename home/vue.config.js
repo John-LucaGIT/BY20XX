@@ -11,6 +11,7 @@ module.exports = defineConfig({
   pwa: {
     title: 'BY20XX',
     name: 'BY20XX',
+    description: 'BY20XX - Simply create, share and edit goals, no registration required. Try it out, its free!',
     version: 1.0,
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black-translucent',
@@ -18,7 +19,7 @@ module.exports = defineConfig({
     msTileColor: "#42b983",
 
     manifestOptions: {
-      background_color: "#42b983",
+      description: 'BY20XX - Simply create, share and edit goals, no registration required. Try it out, its free!',
       appleMobileWebAppCapable: 'yes',
       appleMobileWebAppStatusBarStyle: 'black-translucent',
       themeColor: "#42b983",
