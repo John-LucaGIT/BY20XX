@@ -102,7 +102,7 @@
           this.error['goal'] = "Goal's must be between 3 and 50 characters!";
           return false;
         }
-        var re = RegExp(/^[\w\s-]{0,50}$/);
+        var re = RegExp(/^[\w\s<>-]{0,50}$/);
         if (!re.test(value)) {
           this.error['goal'] = "Goal's may not contain special characters!";
           return false;
@@ -114,7 +114,7 @@
       },
       forceGoalLength(event) {
         let goaltext = event.target.value;
-        var re = RegExp(/^[\w\s-]{0,50}$/);
+        var re = RegExp(/^[\w\s<>-]{0,50}$/);
         if (!re.test(goaltext)) {
           event.target.value = goaltext.slice(0, -1);
           goaltext = goaltext.slice(0, -1);

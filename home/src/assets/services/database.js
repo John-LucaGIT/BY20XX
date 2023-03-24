@@ -55,7 +55,7 @@ function bcompare(password, hashedPassword){
 
 
 const validateGoal = (goal) => {
-    const regex = /^[a-zA-Z ]{1,50}$/; // only allows alphabets and spaces, up to 50 characters
+    const regex = /^[a-zA-Z0-9<> ]{1,50}$/; // only allows alphabets and spaces, up to 50 characters
     if(regex.test(goal)){
         return goal;
     }
