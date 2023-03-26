@@ -92,6 +92,10 @@ class FireDataService {
                 if (additionalData.password && additionalData.password != ""){
                     store.commit('setPasswd', additionalData.password);
                 }
+
+                if (additionalData.locked){
+                    store.commit('setLocked',additionalData.locked);
+                }
             }
         } catch (e) {
             console.error("Error retrieving user document: ", e);
@@ -113,6 +117,8 @@ class FireDataService {
     async saveGoals(goals,additional=false){
 
         let userRef = null;
+        const locked = store.getters.getLocked;
+
         const batch = writeBatch(db);
 
         if(additional.userid && additional.userid != ""){
@@ -158,6 +164,7 @@ class FireDataService {
                     const docRef = await setDoc(userDocRef, {
                         year: validateYear(additional.year),
                         password: additional.password,
+                        locked: locked,
                     });
                 } catch (e) {
                     console.error("Error adding document: ", e);

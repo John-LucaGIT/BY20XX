@@ -13,6 +13,7 @@ export const store = new Vuex.Store({
         toast: JSON.parse(sessionStorage.getItem('toast')) || {},
         password: false,
         edit: false,
+        locked: false,
     },
     actions: {
         loadToast({ state, commit }) {
@@ -61,6 +62,9 @@ export const store = new Vuex.Store({
         },
         setEdit(state,value){
             state.edit = value;
+        },
+        setLocked(state,value){
+            state.locked = value;
         }
     },
     getters: {
@@ -90,6 +94,9 @@ export const store = new Vuex.Store({
         },
         getEdit(state){
             return state.edit;
+        },
+        getLocked(state){
+            return state.locked;
         }
     },
 });

@@ -98,6 +98,7 @@ export default {
         if(auth){
           this.toggleToast('password-unlocked');
           this.$store.commit('setEdit',auth);
+          this.$store.commit('setLocked',false);
           this.edit = auth;
         }
       }else{
