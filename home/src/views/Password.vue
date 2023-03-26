@@ -111,6 +111,7 @@ export default {
                 }
                 this.isActive = false;
                 this.isPasswordSet = true;
+                this.$store.commit('setPasswd',true);
                 let isviewer = this.$store.getters.getViewState;
                 this.$emit('passwordHelper',this.password,isviewer);
             }else{

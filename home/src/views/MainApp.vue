@@ -3,12 +3,13 @@
       <div class="goal-title">
         <h1>My goals for 20</h1><h1 id="yearxx" @keyup="validateYear" contenteditable="true">{{this.$store.getters.getYear || 'XX'}}</h1>
       </div>
-
-      <div id="goal-list">
+      <div v-if="this.$store.getters.getLocked == false" id="goal-list">
         <Goal @deleteFB="fireMethodDeleteHelper" :goalList="goalList"></Goal>
         <span class="error-message" v-if="error.goal">{{error.goal}}</span>
       </div>
-
+      <div class="goal-locked-msg" v-if="this.$store.getters.getLocked">
+        <p class="error-message">This Goal has been Locked by the Creator, to unlock it enter the password.</p>
+      </div>
       <div v-if="this.viewerValue == false || this.editValue" class="goal-wrapper">
             <div class="input-group bg-dark input-group-lg">
                 <div class="bg-dark input-group-prepend" id="input-descrp-lnd">
@@ -16,6 +17,8 @@
                 </div>
                 <input @click="toggleToast('init-info')" type="text" @keyup="forceGoalLength" @keyup.lazy.enter="goalInput('goal')" id="goalInput" value="" class="text-light bg-dark form-control" aria-label="Enter Goal" aria-describedby="inputGroup-sizing-sm">
                 <button v-if="this.viewerValue == false || this.editValue" @click="this.$emit('saveGoalsHelper')" class="btn btn"><i class="fa-solid fa-floppy-disk"></i></button>
+                <button v-if="this.$store.getters.getPassword" @click="lockGoal" class="btn btn"><i :class="{'fa-solid fa-lock-open': !locked, 'fa-solid fa-lock': locked}"></i></button>
+
             </div>
       </div>
 
@@ -52,10 +55,13 @@
           year: '',
           viewer: null,
           error: [],
+          locked: false,
         };
     },
     created(){
       this.setViewer();
+      this.updateLock;
+
     },
     async mounted() {
 
@@ -68,6 +74,7 @@
         await this.updateGoalList;
         await this.updateYear;
         await this.updateEdit;
+        await this.updateLock;
       }
       setTimeout(() => {
         this.setViewer();
@@ -131,6 +138,14 @@
         }
         return this.viewer = this.$store.getters.getViewState;
       },
+      lockGoal(){
+        if (this.locked == false){
+          this.locked = !this.locked;
+          this.toggleToast('locked');
+          this.$store.commit('setLocked',this.locked);
+        }
+      },
+
       toggleToast(toasti) {
         switch(toasti){
           case 'goal':
@@ -189,6 +204,24 @@
                 this.$store.commit('setToast','viewer');
               }
               break;
+          case 'locked':
+            if (this.locked == true)
+              if (!this.$store.getters.getToast['locked']){
+                this.toast.info("Goal has been locked, only people with the password can view it.", {
+                  position: "top-right",
+                  timeout: 7000,
+                  closeOnClick: true,
+                  pauseOnFocusLoss: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  draggablePercent: 0.6,
+                  showCloseButtonOnHover: false,
+                  closeButton: "button",
+                  icon: true,
+                  rtl: false
+                });
+                this.$store.commit('setToast','locked');
+              }
         }
       },
       fireMethodDeleteHelper(payload) {
@@ -210,6 +243,9 @@
       updateGoalList(){
         this.year = this.$store.getters.getYear;
         return this.goalList = this.$store.getters.getGoal;
+      },
+      updateLock(){
+        return this.locked = this.$store.getters.getLocked;
       },
       updateYear(){
         let fetchedYear = this.$store.getters.getYear;
@@ -244,6 +280,7 @@ div.goal-title{
   margin-top: 0.4rem;
   margin-bottom: 2rem;
 }
+
 div.goal-wrapper{
     width: 50%;
     display: flex;
@@ -305,8 +342,17 @@ div.goal-title h1{
   }
 }
 
+.goal-locked-msg{
+  margin-top: 5rem;
+  margin-bottom: 10rem;
+}
 
 .fa-floppy-disk{
+  font-size: 1.4rem;
+  color: white;
+}
+
+.fa-solid{
   font-size: 1.4rem;
   color: white;
 }
