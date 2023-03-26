@@ -20,6 +20,7 @@ Let me know if you have feedback or any advice on how to best go forward with th
 - Added analytics
 - Added mobile app support with swipe features
 - Shared URL automatically copied to clipboard (not on Safari)
+- Lock goals
 
 ## Features Deployed
 - Deployed app [BY20XX](https://BY20XX.com)
